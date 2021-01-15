@@ -1,0 +1,12 @@
+{
+    "epic_server": "http://116.203.211.229:3413",
+    "epic_server_custom": false,
+    "epic_wallet_directory": ".epic/main",
+    "epic_wallet_directory_type": "Local",
+    "http_inter": "localhost",
+    "http_port": 8082,
+    "start_webgui": true,
+    "language": "english",
+    "usetor":false,
+    "easy":true
+}

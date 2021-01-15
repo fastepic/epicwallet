@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+        <InvariantGlobalization>true</InvariantGlobalization>
+        <ApplicationIcon>epiclogopay_zMw_1.ico</ApplicationIcon>
+    
+  </PropertyGroup>
+
+
+
+</Project>

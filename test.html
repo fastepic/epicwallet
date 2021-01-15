@@ -1,0 +1,3008 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <meta http-equiv="X-UA-Compatible" content='ie=edge'>
+    <link rel="stylesheet" href="/css">
+    <title>Epic Cash Wallet</title>
+    <link rel='icon' href='/EC_174_logo_colorv2.svg'>   
+
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500&display=swap" rel="stylesheet">    
+ <!-- invayuxbtjbey7xj4f5lulzx72rtuwhelejyjavfyelpgqx5ycwq.b32.i2p -->
+
+ <!--  wh3otay6gs6iavfmfa26ym2fi7e74uhz46mlednjw3n3ckijdawq.b32.i2p -->
+
+ <!-- the address : Andrew is already registered, please try another address -->
+</head>
+
+<style type="text/css">
+	
+	.body{
+
+		background-color: #0c0c0b;
+		
+	}
+
+	.blacklogo{
+
+
+		  display: block;
+		  margin-left: auto;
+		  margin-right: auto;
+		  margin-top: 3%;
+		  
+		  height: 70%;
+
+	}
+
+	.center {
+	  margin: 0;
+	  position: absolute;
+	  top: 50%;
+	  left: 50%;
+	  -ms-transform: translate(-50%, -50%);
+	  transform: translate(-50%, -50%);
+	}
+
+	.words {
+		 
+		 background-color:#e0b13d;
+		 margin-right: 5px;
+		 margin-top:5px;
+	}
+
+	.w3-rubik {
+  	font-family: "Rubik", Sans-serif;
+	}
+
+	.but:hover {
+  		background-color:red;
+	}
+
+</style>
+
+<script>
+  
+  var work = false
+
+  var tofixed = 3
+
+  function working(){
+
+    work = true
+  //  document.getElementById("workingicon").style.visibility = "visible"
+  }
+
+  function notworking(){
+    work = false
+   // document.getElementById("workingicon").style.visibility = "hidden"
+  }
+
+  function starter(){
+
+  	  var finalizedropZone = document.getElementById('dragfinalize');
+
+		// Optional.   Show the copy icon when dragging over.  Seems to only work for chrome.
+		finalizedropZone.addEventListener('dragover', function(e) {
+		    e.stopPropagation();
+		    e.preventDefault();
+		    e.dataTransfer.dropEffect = 'copy';
+		});
+
+		// Get file data on drop
+		finalizedropZone.addEventListener('drop', function(e) {
+		    e.stopPropagation();
+		    e.preventDefault();
+
+		    finalizefiletowallet = e.dataTransfer.files[0]
+     		
+     		finalizeresponsefile()
+
+     		//receivetxfile()
+
+/*		    var files = e.dataTransfer.files; // Array of all files
+		    
+		    for (var i=0, file; file=files[i]; i++) {
+		        
+		    	console.log(file.type)
+		        
+		            var reader = new FileReader();
+
+		            reader.onload = function(e2) {
+		                // finished reading file data.
+		                //var img = document.createElement('img');
+		                //img.src= e2.target.result;
+		                //document.body.appendChild(img);
+		                try{
+		                	let json = JSON.parse(e2.target.result)
+		                	document.getElementById("FinalizeError").style.display = "none"
+		                	//console.log(json)
+		            	
+		            	} catch(error){
+
+		            		console.log(error)
+		            		document.getElementById("FinalizeError").innerHTML = "Your file looks wrong"
+		            		document.getElementById("FinalizeError").style.display = "block"
+		            	}
+		            }
+
+		            reader.readAsText(file); // start reading the file data.
+		        
+		    }*/
+		});
+
+
+  	  var responsedropZone = document.getElementById('dragresponse');
+
+		// Optional.   Show the copy icon when dragging over.  Seems to only work for chrome.
+		responsedropZone.addEventListener('dragover', function(e) {
+		    e.stopPropagation();
+		    e.preventDefault();
+		    e.dataTransfer.dropEffect = 'copy';
+		});
+
+		// Get file data on drop
+		responsedropZone.addEventListener('drop', function(e) {
+		    e.stopPropagation();
+		    e.preventDefault();
+		    //var files = e.dataTransfer.files; // Array of all files
+		    
+		    txfiletowallet = e.dataTransfer.files[0];
+            
+            receivetxfile()
+
+		});
+
+
+
+      if (window.XMLHttpRequest) {
+         // code for modern browsers
+         xhttp = new XMLHttpRequest();
+       } else {
+         // code for old IE browsers
+         xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+      } 
+
+      xhttp.onreadystatechange = function() {
+
+        //console.log("ready Statet ", this.readyState)
+        //console.log("status ", this.status)
+        //console.log("---------------------------------")
+
+        if(this.readyState == 4 && this.status == 0){
+
+          window.close()
+        }
+        
+        if (this.readyState == 4 && this.status == 200) {
+          //document.getElementById("demo").innerHTML =
+          console.log(this.responseText);
+
+          notworking()
+
+          try{
+
+              const type = this.getResponseHeader('Content-Type');
+              console.log(type)
+              if(type!="application/json") {
+
+              } else {
+                  var odp = JSON.parse(this.responseText);
+
+                  //console.log(odp)
+                  //console.log(odp.run)
+
+                  switch(odp.kind) {
+
+                   case "sendbyaddress":
+                        
+                        console.log(odp.odp)
+                        if(odp.odp.ok){
+
+                          alert("Epics sent")
+                          history();
+
+                        } else {
+
+                          alert("Epic send problem")
+                        }
+                   
+                   break; 
+
+
+                   case 'sendbyfile':
+                       //console.log(odp.filename);
+
+                       if(odp.odp!=false){
+                        const blob = new Blob([JSON.stringify(odp.odp)], {type:"application/json" });
+                        downloadBlob(blob, odp.filename);
+                       } else {
+                          alert("it looks like send by file has problem");
+                       }
+
+                   break;
+
+                   case 'sendbyhttp':
+                       //console.log(odp.filename);
+
+                       if(odp.odp!=false){
+                        
+                        balance();
+                        document.getElementById("new_wallet7").style.display="none";
+                       } else {
+                          alert("Maybe not enough funds, remember fee for miners or wrong address.");
+                       }
+
+                   break;
+
+
+                    case "balance":
+                        balanceodp(odp.odp);
+                    break;
+
+                    case "history":
+                        if(odp.odp!=false) historyodp(odp);
+                    break; 
+
+                    case "outputs":
+                    	if(odp.odp!=false) outputsodp(odp);
+                    break;
+
+                    case "settings":
+                        //checkshow(odp);
+                        
+                    break; 
+
+                    case "checkwallet":
+
+
+
+                    break;  
+
+
+                    case "lookfor":
+                        LookForodp(odp);
+                    break;
+
+                    case "NewWallet":
+                        NewWalletodp(odp.odp);
+                    break;
+
+                    case "Login":
+                    	Loginodp(odp.odp);
+                    break;
+
+                    case "txreceive":
+                       
+                       document.getElementById("new_wallet9").style.display = "none"
+                       if(odp.odp!=false){
+                        const blob = new Blob([JSON.stringify(odp.odp)], {type:"application/json" });
+                        downloadBlob(blob, odp.filename);
+
+
+                       } else {
+                          alert("it looks like transaction file is wrong");
+                       }
+
+                    break;
+
+                    case "responsefinalize":
+
+                    	if(odp.odp!=false){
+
+                    		alert("Finalize success.")
+
+                    	} else {
+
+                    		alert("Finalize problem. Check if you have internet connection.")
+                    	}
+
+                    break;
+
+                    case "receivebyhttp":
+
+                    	//console.log(odp);
+                    	if(odp.odp == true){
+
+                    		document.getElementById("ReceiveByHttp").style.color = "green"
+                    	} else {
+
+                    		document.getElementById("ReceiveByHttp").style.color = "black"
+                    	}
+
+                    break;
+
+                    case "receivebyfast":
+                    	// ReceiveByFastAccept
+                    	if(odp.odp == true){
+
+                    		document.getElementById("ReceiveByFastAccept").style.color = "green"
+                    	} else {
+
+                    		document.getElementById("ReceiveByFastAccept").style.color = "black"
+                    	}
+
+                    break;
+
+                    case "registershort":
+
+                    	alert("Address is "+odp.odp)		
+
+                    break;
+
+                    case "canceltransaction":
+
+                    	setTimeout(balance, 2000);
+
+                    break;
+
+                    case "showmyaddresses":
+
+                    	let smas = ""
+                    	for(i=0; i<odp.odp.length; i++){
+
+                    		smas = smas + "https://fastepic.eu/"+odp.odp[i] + "<br>"	
+                    	}
+
+                    	document.getElementById("myaddresses").innerHTML = smas
+
+                    break;
+
+                    case "checkchecker":
+
+                    	if(odp.odp=="Working") {
+
+                          document.getElementById("checkinfo").innerHTML = odp.odp;
+
+                    	} else if(odp.odp=="OK"){
+
+                    		document.getElementById("checkinfo").innerHTML = odp.odp;
+                    		clearInterval(checkfinishcheck)
+                    		balanceinterval = setInterval(balance, 1000*60)
+                    		document.getElementById("new_wallet14").style.display = "none"
+                    		alert("Check finished correct")
+
+                    	} else if(odp.odp=="Mistake") {
+
+                    		document.getElementById("checkinfo").innerHTML = odp.odp;
+                    		clearInterval(checkfinishcheck)
+                    		balanceinterval = setInterval(balance, 1000*60)
+                    		document.getElementById("new_wallet14").style.display = "none"
+                    		alert("Check mistake")
+                    	}
+
+                    break;
+
+                    case "advancedoptionssave":
+
+                    	if(odp.odp) {
+
+                    		window.close();
+                    	} else {
+
+                    	  alert("Wallet is under checking ... can't save")
+                    	}
+
+                    break;
+
+
+                    case "asknextlanguage":
+                        ChangeLanguage(odp.words)
+                    break;
+
+                    case "restorewallet":
+
+                    	if(odp.odp){
+
+                    		alert("Wallet restored")
+
+                    	} else {
+
+                    		alert("Wallet is not restored")
+                    	}
+
+                    break;
+
+                    case "parameters":
+
+                    	parametersodp(odp);
+
+                    break;
+
+                    case "exit":
+                        console.log(exit)
+                        window.close();
+                    break;
+
+                  
+                  }
+
+                  if(odp.kind=="owner_api") {
+
+                    document.getElementById("pass").value = ""
+
+                  }
+
+              }
+
+           } catch (error) {
+              console.error(error);
+              // expected output: ReferenceError: nonExistentFunction is not defined
+              // Note - error messages will vary depending on browser
+              document.getElementById("passmain").value = ""
+              document.getElementById("new_wallet4").style.display = "block";
+              document.getElementById("new_wallet5").style.display = "none"
+
+           }   
+
+
+
+
+        }
+      }
+
+ //    setInterval(balance,1000*60);
+     
+    LookFor();
+
+  }
+
+
+
+
+function ChangeLanguage(words){
+
+	console.log(words)
+
+	for(i=0; i<words.length;i++){
+
+		elements = document.getElementsByName("w"+i)
+
+		for(e=0; e<elements.length; e++){
+
+			elements[e].innerHTML = words[i]
+		}
+	}
+
+}
+
+
+function LookForodp(odp){
+
+	console.log("LookForodp")
+	console.log(odp)
+
+	//language
+	document.getElementById("Language").innerHTML=odp.language;
+    
+    let lan = ""
+	for(i=0; i<odp.languages.length; i++){
+
+        lan = lan + `<a id="chooselanguage" class="w3-bar-item w3-btn" style="background-color: #e0b13d" onmouseover="changeColor(this,'#e8c878')" onmouseout="changeColor(this,'#e0b13d')" onclick="clicker(this)">${odp.languages[i]}</a>`
+	}
+
+	ChangeLanguage(odp.words)
+
+	console.log(lan)
+
+	document.getElementById("Languages").innerHTML = lan
+
+
+	var sss = document.getElementsByName("walletserverradio")
+
+	for(i=0; i < sss.length; i++) {
+	    
+	    if(!odp.epicservercustom){
+	      if(sss[i].value==odp.epicserveraddress ) sss[i].checked = true;
+	    } else 
+	    if(sss[i].value=="custom" ) { 
+	      sss[i].checked = true
+	      document.getElementById("walletserver").value = odp.epicserveraddress 
+	    }
+	}
+
+	var www = document.getElementsByName("walletfolderradio")
+
+	for(i=0; i < www.length; i++) {
+	    
+	    
+	      if(www[i].value==odp.epicwallethometype ) www[i].checked = true;
+	    
+	}
+
+    document.getElementById("usetor").checked = odp.usetor;
+
+	if(odp.odp) {
+
+		//need create new wallet
+		//alert("New wallet ned create")
+		document.getElementById("new_wallet1").style.display = "block";
+	} else {
+
+		document.getElementById("new_wallet4").style.display = "block";
+	}
+
+}
+
+
+
+function LookFor(){
+
+  if(work) return;
+  working()
+  xhttp.open('POST', 'content_receiver', true);
+  xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+  xhttp.send('{\"kind\":\"lookfor\"}'); 
+
+
+}
+
+function downloadBlob(blob, name) {
+  // Convert your blob into a Blob URL (a special url that points to an object in the browser's memory)
+  const blobUrl = URL.createObjectURL(blob);
+
+  // Create a link element
+  const link = document.createElement("a");
+
+  // Set link's href to point to the Blob URL
+  link.href = blobUrl;
+  link.download = name;
+
+  // Append link to the body
+  document.body.appendChild(link);
+
+  // Dispatch click event on the link
+  // This is necessary as link.click() does not work on the latest firefox
+  link.dispatchEvent(
+    new MouseEvent('click', { 
+      bubbles: true, 
+      cancelable: true, 
+      view: window 
+    })
+  );
+
+  // Remove link from body
+  document.body.removeChild(link);
+}
+
+function exit(){
+
+  if(work) return;
+  working()
+  xhttp.open('POST', 'content_receiver', true);
+  xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+  xhttp.send('{\"kind\":\"exit\"}'); 
+
+
+}
+
+function changeColor(object, color){
+
+	object.style.backgroundColor = color;
+}
+
+function NewWallet(pass){
+
+  if(work) return;
+  working()
+
+  console.log("NewWallet")
+  xhttp.open('POST', 'content_receiver', true);
+  xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+  xhttp.send('{\"kind\":\"NewWallet\", \"pass\":\"'+pass+'\" }'); 
+
+
+}
+
+function NewWalletodp(odp){
+
+  console.log(odp)
+  if(odp.length>10){
+
+  	let ww = document.getElementsByName("words");
+
+  	for(i=0; i<ww.length; i++){
+
+  		ww[i].innerHTML = odp[i+1]
+  	}
+
+  	document.getElementById("new_wallet2").style.display = "none"
+  	document.getElementById("new_wallet3").style.display = "block"
+
+  } else {
+
+  	alert("Can't create new wallet")
+  }
+
+}
+
+
+function login(pass){
+
+  if(work) return;
+  working()
+
+  console.log("login")
+  xhttp.open('POST', 'content_receiver', true);
+  xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+  xhttp.send('{\"kind\":\"Login\", \"pass\":\"'+pass+'\" }'); 
+
+
+}
+
+
+var balanceinterval; 
+
+var checkfinishcheck;
+
+function Loginodp(odp){
+
+	if(odp==true){
+
+		setTimeout(balance, 2000);
+
+        balanceinterval = setInterval(balance, 1000*60)
+	}
+}
+
+
+function balance() {
+
+  if(work) return;
+  working()
+
+  console.log("balance")
+  xhttp.open('POST', 'content_receiver', true);
+  xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+  xhttp.send('{\"kind\":\"balance\"}'); 
+
+
+}
+
+function history(){
+
+      console.log('history')
+      if(work) return;
+      working()
+   
+      xhttp.open('POST', 'content_receiver', true);
+      xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+      xhttp.send('{\"kind\":\"history\"}'); 
+
+}
+
+
+var sent = [];
+var received = [];
+var cancelled = [];
+var more = [];
+
+var currenttab = "sent";
+
+var sentpage = 1;
+var receivedpage = 1;
+var cancelledpage = 1;
+var morepage = 1;
+
+function historyodp(odp){
+    
+    //console.log(odp)
+//console.log("How many elements ", odp.odp.result.Ok[1].length);
+
+	var hist = odp.odp.result.Ok[1]
+
+	sent = []
+	received = []
+	cancelled = []
+	more = []
+
+	for(i=hist.length-1; i>=0; i=i-1){
+        
+        switch(hist[i].tx_type){
+
+        	case "TxReceived":
+        		received.push(hist[i]);
+        	break; 
+
+        	case "TxSent":
+        		sent.push(hist[i]);
+        	break;
+
+        	case "TxSentCancelled":
+        		cancelled.push(hist[i]);
+        	break;
+        }		 
+	}
+
+
+	switch(currenttab){
+
+		case "sent":
+
+			drawHistorySent(sentpage);
+
+		break;
+
+		case "received":
+			drawHistoryReceived(receivedpage);
+		break;
+
+		case "cancelled":
+			drawHistoryCancelled(cancelledpage);
+		break;
+	}
+
+
+   outputs()
+}
+
+
+function outputs(){
+
+      console.log('outputs')
+      if(work) return;
+      working()
+   
+      xhttp.open('POST', 'content_receiver', true);
+      xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+      xhttp.send('{\"kind\":\"outputs\"}'); 
+
+      
+}
+
+
+
+function outputsodp(odp){
+    console.log("outputsodp")
+	//console.log(odp)
+
+	more = odp.odp.result.Ok[1];
+    //console.log(outp.length)
+
+    if(currenttab=="more") drawMore(morepage);
+    
+    parameters(); 
+}
+
+function parameters(){
+
+      console.log('parameters')
+      if(work) return;
+      working()
+   
+      xhttp.open('POST', 'content_receiver', true);
+      xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+      xhttp.send('{\"kind\":\"parameters\"}'); 
+
+
+}
+
+function parametersodp(odp){
+
+	//alert(odp.fastepicaddress +" "+odp.listen)
+
+	if(odp.listen==true){
+
+		document.getElementById("ReceiveByHttp").style.color = "green"
+	
+	} else {
+
+		document.getElementById("ReceiveByHttp").style.color = "black"
+	}
+
+	if(odp.listenfast==true){
+
+		document.getElementById("ReceiveByFastAccept").style.color = "green"
+	} else {
+
+		document.getElementById("ReceiveByFastAccept").style.color = "black"
+	}
+
+	document.getElementById("fastaddress").value = odp.fastepicaddress
+}
+
+function canceltransaction(id){
+
+
+      console.log('cancel transaction')
+      if(work) return;
+      working()
+   
+      xhttp.open('POST', 'content_receiver', true);
+      xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+      xhttp.send('{\"kind\":\"canceltransaction\", \"id\":'+id+'}');
+
+}
+
+
+function drawMore(page){
+
+	if(more.length==0) return;
+
+    var row = ""
+    var stop = 0;
+    
+    var start = (page-1)*4
+    
+    if(start>=more.length) start = more.length-1;
+    if( start+4 >= more.length ) stop= more.length; else stop = start+4;  
+	
+	for(i=start; i<stop; i=i+1){
+
+	    let sending = "Canceled"
+	    let icon = "icon-tx-canceled"
+	    let commit = ""
+	    let msg = "" 
+	    let amount = ""
+	    let height = ""
+		
+        
+        	sending = more[i].output.status;
+
+        	if(more[i].output.is_coinbase) msg = "Coinbase"; 
+        	
+        	switch(more[i].output.status){
+
+        		case "Locked":
+        			icon = "icon-output-locked";
+        		break;
+
+        		case "Unconfirmed":
+        			icon =  "icon-output-unconfirmed";
+        		break;
+
+        		case "Unspent":
+        			icon = "icon-output-unspent";
+        		break;
+        	}
+        	
+        	//parseFloat(odp.result.Ok[1].last_confirmed_height).toLocaleString('en')
+        	height = parseFloat(more[i].output.height).toLocaleString('en');
+        
+
+        commit = more[i].commit;
+
+        
+        amount = (Number(more[i].output.value)/1e8).toFixed(tofixed)
+
+        //fee = (Number(receuved[i].fee)/1e8).toFixed(tofixed)
+
+	    row = row +  `<div class="w3-cell-row" style="width: 100%; align-items: left"><div class="w3-cell" style="vertical-align: middle;"><img src="/${icon}" style="height: 45px;width: 45px"></div><div class="w3-cell" style="width: 100%" ><div class="w3-cell-row " style="vertical-align: top" ><div class="w3-cell w3-text-white w3-medium" style="width:70%; text-align: left;padding-left: 10px">${sending}</div><div class="w3-cell w3-text-white w3-medium" style="width:30%; text-align: right">${amount}</div></div><div class="w3-cell-row " style="color: #828282" ><div class="w3-cell w3-small" style="width:70%; text-align: left;  padding-left: 10px">${commit}  <span class="w3-text-white" style=" ">${msg}</span></div><div class="w3-cell w3-small" style="width:30%; text-align: right">Block height: ${height}</div></div></div></div><hr style="margin-top: 5px;">`
+
+	}
+
+	document.getElementById("historyMore").innerHTML = row;
+
+}
+
+
+
+
+function drawHistoryCancelled(page){
+
+	if(cancelled.length==0) return;
+
+    var row = ""
+    var stop = 0;
+    
+    var start = (page-1)*4
+    
+    if(start>=cancelled.length) start = cancelled.length-1;
+    if( start+4 >= cancelled.length ) stop= cancelled.length; else stop = start+4;  
+	
+	for(i=start; i<stop; i=i+1){
+
+		let confirmed = "none";
+	    let sending = "Canceled"
+	    let icon = "icon-tx-canceled"
+	    let tx_slate_id = ""
+	    let messages = []
+	    let msg = "" 
+	    let amount = ""
+	    let fee = ""
+	    let date = ""
+		let id = -1
+    
+        
+        id = cancelled[i].id
+
+         
+        	confirmed = "none";
+        	sending = "Canceled" 
+        	icon = "icon-tx-canceled"
+        	date = new Date(cancelled[i].creation_ts).toLocaleString()
+        
+
+        tx_slate_id = cancelled[i].tx_slate_id;
+
+        messages = []
+
+        if(cancelled[i].messages!=null){
+
+	        for(m = 0; m<cancelled[i].messages.messages.length; m=m+1){
+
+	        	messages.push(cancelled[i].messages.messages[m].message)
+	        }
+
+	        if(messages[0]!=null) msg = messages[0]; else msg = "";
+    	} else msg="";
+        amount = ((Number(cancelled[i].amount_credited) - Number(cancelled[i].amount_debited))/1e8).toFixed(tofixed)
+
+        //fee = (Number(receuved[i].fee)/1e8).toFixed(tofixed)
+
+	    row = row +  `<div class="w3-cell-row" style="width: 100%; align-items: left"><div class="w3-cell" style="vertical-align: middle;"><img src="/${icon}" style="height: 45px;width: 45px"></div><div class="w3-cell" style="width: 100%" ><div class="w3-cell-row " style="vertical-align: top" ><div class="w3-cell w3-text-white w3-medium" style="width:70%; text-align: left;padding-left: 10px">${sending} <button class="w3-btn w3-round-large w3-small" style="display:${confirmed}" onclick="canceltransaction(${id})" >Cancel</button></div><div class="w3-cell w3-text-white w3-medium" style="width:30%; text-align: right">${amount}</div></div><div class="w3-cell-row " style="color: #828282" ><div class="w3-cell w3-small" style="width:70%; text-align: left;  padding-left: 10px">${tx_slate_id}  <span class="w3-text-white" style=" ">${msg}</span></div><div class="w3-cell w3-small" style="width:30%; text-align: right">${date}</div></div></div></div><hr style="margin-top: 5px;">`
+
+	}
+
+	document.getElementById("historyCancelled").innerHTML = row;
+
+}
+
+
+function drawHistoryReceived(page){
+
+	if(received.length==0) return;
+
+    let row = ""
+    let stop = 0;
+
+    let start = (page-1)*4
+    
+    if(start>=received.length) start = received.length-1;
+    if( start+4 >= received.length ) stop= received.length; else stop = start+4;  
+	
+	for(i=start; i<stop; i=i+1){
+
+		let confirmed = "none";
+	    let sending = "Sending..."
+	    let icon = "icon-tx-sending-progress"
+	    let tx_slate_id = "" 
+	    let amount = ""
+	    let fee = ""
+	    let date = ""
+	    let id = -1
+	    let messages = []
+        let msg = ""
+		//console.log(received[i])
+        
+        id = received[i].id
+
+        if(received[i].confirmed) { 
+        	confirmed = "none";
+        	sending = "Received" 
+        	icon = "icon-tx-received"
+        	date = new Date(received[i].confirmation_ts).toLocaleString()
+        } else { 
+        	confirmed = "block"
+        	sending = "Receiving..." 
+        	icon = "icon-tx-receiving-progress"
+        	date = new Date(received[i].creation_ts).toLocaleString()
+        }
+
+        tx_slate_id = received[i].tx_slate_id;
+
+        //alert(received[i])
+        
+        if(received[i].messages!=null){
+
+	        for(m = 0; m<received[i].messages.messages.length; m=m+1){
+
+	        	messages.push(received[i].messages.messages[m].message)
+	        	
+	        }
+
+	        if(messages[0]!=null) msg = messages[0]; else msg = "";
+    	} else msg = "";
+        //console.log("msg", msg, " ", messages[0])
+
+        amount = ((Number(received[i].amount_credited) - Number(received[i].amount_debited))/1e8).toFixed(tofixed)
+
+        //fee = (Number(receuved[i].fee)/1e8).toFixed(tofixed)
+
+	    row = row +  `<div class="w3-cell-row" style="width: 100%; align-items: left"><div class="w3-cell" style="vertical-align: middle;"><img src="/${icon}" style="height: 45px;width: 45px"></div><div class="w3-cell" style="width: 100%" ><div class="w3-cell-row " style="vertical-align: top" ><div class="w3-cell w3-text-white w3-medium" style="width:70%; text-align: left;padding-left: 10px">${sending} <button class="w3-btn w3-round-large w3-small" style="display:${confirmed}" onclick="canceltransaction(${id})" >Cancel</button></div><div class="w3-cell w3-text-white w3-medium" style="width:30%; text-align: right">${amount}</div></div><div class="w3-cell-row " style="color: #828282" ><div class="w3-cell w3-small" style="width:70%; text-align: left;  padding-left: 10px">${tx_slate_id}  <span class="w3-text-white" style=" ">${msg}</span></div><div class="w3-cell w3-small" style="width:30%; text-align: right">${date}</div></div></div></div><hr style="margin-top: 5px;">`
+
+	}
+
+	document.getElementById("historyReceived").innerHTML = row;
+
+}
+
+
+function drawHistorySent(page){
+
+    if(sent.length==0) return;
+
+    var row = ""
+    var stop = 0;
+    
+    let start = (page-1)*4
+
+    if(start>=sent.length) start = sent.length-1;
+    if( start+4 >= sent.length ) stop= sent.length; else stop = start+4;  
+	
+	for(i=start; i<stop; i=i+1){
+
+	    let confirmed = "none";
+	    let sending = "Sending..."
+	    let icon = "icon-tx-sending-progress"
+	    let tx_slate_id = ""
+	    let messages = []
+	    let msg = "" 
+	    let amount = ""
+	    let fee = ""
+	    let date = ""
+	    let id = -1;
+
+        
+		id = sent[i].id
+        
+		console.log("sent id ", id, "sent length ", sent.length, " stop ", stop)
+
+        if(sent[i].confirmed) { 
+        	confirmed = "none";
+        	sending = "Sent" 
+        	icon = "icon-tx-sent"
+        	date = new Date(sent[i].confirmation_ts).toLocaleString()
+        } else { 
+        	confirmed = "block"
+        	sending = "Sending..." 
+        	icon = "icon-tx-sending-progress"
+        	date = new Date(sent[i].creation_ts).toLocaleString()
+        }
+
+        tx_slate_id = sent[i].tx_slate_id;
+
+        messages = []
+
+        if(sent[i].messages!=null){
+	        for(m = 0; m<sent[i].messages.messages.length; m=m+1){
+
+	        	messages.push(sent[i].messages.messages[m].message)
+	        }
+
+	        if(messages[0]!=null) msg = messages[0]; else msg = "";
+        } else msg="";
+
+        amount = ((Number(sent[i].amount_credited) - Number(sent[i].amount_debited))/1e8).toFixed(tofixed)
+
+        fee = (Number(sent[i].fee)/1e8).toFixed(tofixed)
+
+	    row = row +  `<div class="w3-cell-row" style="width: 100%; align-items: left"><div class="w3-cell" style="vertical-align: middle;"><img src="/${icon}" style="height: 45px;width: 45px"></div><div class="w3-cell" style="width: 100%" ><div class="w3-cell-row " style="vertical-align: top" ><div class="w3-cell w3-text-white w3-medium" style="width:70%; text-align: left;padding-left: 10px">${sending} <button class="w3-btn w3-round-large w3-small" style="display:${confirmed}" onclick='canceltransaction(${id})'>Cancel</button></div><div class="w3-cell w3-text-white w3-medium" style="width:30%; text-align: right">${amount} ( fee ${fee} )</div></div><div class="w3-cell-row " style="color: #828282" ><div class="w3-cell w3-small" style="width:70%; text-align: left;  padding-left: 10px">${tx_slate_id}  <span class="w3-text-white" style=" ">${msg}</span></div><div class="w3-cell w3-small" style="width:30%; text-align: right">${date}</div></div></div></div><hr style="margin-top: 5px;">`
+
+	}
+
+	document.getElementById("historySent").innerHTML = row;
+
+}
+
+ /*{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "result": {
+    "Ok": [
+      true,
+      {
+        "amount_awaiting_confirmation": "0",
+        "amount_awaiting_finalization": "0",
+        "amount_currently_spendable": "0",
+        "amount_immature": "0",
+        "amount_locked": "0",
+        "last_confirmed_height": "706494",
+        "minimum_confirmations": "10",
+        "total": "0"
+      }
+    ]
+  }
+}*/
+
+
+function balanceodp(odp){
+   
+  // console.log(odp)
+   
+   if(Number((Number(odp.result.Ok[1].total)/1e8).toFixed(tofixed))==0) document.getElementById("total").innerHTML=0; else 
+   document.getElementById("total").innerHTML = (Number(odp.result.Ok[1].total)/1e8).toFixed(tofixed); 
+   
+   if(Number((Number(odp.result.Ok[1].amount_awaiting_confirmation)/1e8).toFixed(tofixed))==0) document.getElementById("Unconfirmed").innerHTML = 0; else  
+   document.getElementById("Unconfirmed").innerHTML = (Number(odp.result.Ok[1].amount_awaiting_confirmation)/1e8).toFixed(tofixed); 
+
+   if(Number((Number(odp.result.Ok[1].amount_currently_spendable)/1e8).toFixed(tofixed))==0) document.getElementById("Spendable").innerHTML = 0; else  
+   document.getElementById("Spendable").innerHTML = (Number(odp.result.Ok[1].amount_currently_spendable)/1e8).toFixed(tofixed);
+
+   if(Number((Number(odp.result.Ok[1].amount_awaiting_finalization)/1e8).toFixed(tofixed))==0) document.getElementById("Unfinalized").innerHTML =0; else 
+   document.getElementById("Unfinalized").innerHTML = (Number(odp.result.Ok[1].amount_awaiting_finalization)/1e8).toFixed(tofixed);
+
+   if(Number((Number(odp.result.Ok[1].amount_locked)/1e8).toFixed(tofixed))==0) document.getElementById("Locked").innerHTML=0; else 
+   document.getElementById("Locked").innerHTML = (Number(odp.result.Ok[1].amount_locked)/1e8).toFixed(tofixed);
+
+   if(Number((Number(odp.result.Ok[1].amount_immature)/1e8).toFixed(tofixed))==0 ) document.getElementById("Inmature").innerHTML=0; else  
+   document.getElementById("Inmature").innerHTML = (Number(odp.result.Ok[1].amount_immature)/1e8).toFixed(tofixed);
+
+   document.getElementById("new_wallet4").style.display = "none"
+
+   document.getElementById("new_wallet5").style.display = "block"  
+
+   if(odp.result.Ok[0]==true) {
+
+   		document.getElementById("Height").innerHTML = parseFloat(odp.result.Ok[1].last_confirmed_height).toLocaleString('en');
+   		document.getElementById("Height").style.color = "white"
+   }  else {
+
+		document.getElementById("Height").innerHTML = "_______";
+		document.getElementById("Height").style.color = "#9a3328"
+
+   }
+
+   history();
+}
+
+function SendByFile(){
+
+    if(!isNaN(document.getElementById("amount").value) && document.getElementById("amount").value>0){
+
+    	
+
+    	  if(work) return;
+		  working()
+
+		  console.log("balance")
+		  xhttp.open('POST', 'content_receiver', true);
+		  xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		  xhttp.send('{\"kind\":\"sendbyfile\", \"amount\":\"'+document.getElementById("amount").value+'\", \"msg\":\"'+document.getElementById("message").value+'\", \"smallest\":'+document.getElementById("smallest").checked+'}');
+
+    }
+}
+
+function SendByHttp(){
+
+    if(!isNaN(document.getElementById("amount").value) && document.getElementById("amount").value>0){
+
+    	
+
+    	  if(work) return;
+		  working()
+
+		  console.log("balance")
+		  xhttp.open('POST', 'content_receiver', true);
+		  xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		  xhttp.send('{\"kind\":\"sendbyhttp\", \"amount\":\"'+document.getElementById("amount").value+'\", \"msg\":\"'+document.getElementById("message").value+'\", \"smallest\":'+document.getElementById("smallest").checked+', \"httpdest\":\"'+document.getElementById('httpdest').value+'\"}');
+
+    }
+}
+
+
+function ReceiveByHttp(){
+
+    	  if(work) return;
+		  working()
+		  
+		  xhttp.open('POST', 'content_receiver', true);
+		  xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		  xhttp.send('{\"kind\":\"receivebyhttp\"}');	
+
+}
+
+
+function ReceiveByFast(){
+
+    	  if(work) return;
+		  working()
+		  
+		  xhttp.open('POST', 'content_receiver', true);
+		  xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		  xhttp.send('{\"kind\":\"receivebyfast\"}');	
+
+}
+
+
+function RegisterShortAddress(){
+
+
+   if(document.getElementById("shortfastaddress").value.length>1){
+    	  if(work) return;
+		  working()
+		  
+		  xhttp.open('POST', 'content_receiver', true);
+		  xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		  xhttp.send('{\"kind\":\"registershort\", \"shortfastaddress\":\"'+document.getElementById("shortfastaddress").value+'\"}');	
+
+   }
+
+}
+
+function ShowMyAddresses(){
+
+    	  if(work) return;
+		  working()
+		  
+		  xhttp.open('POST', 'content_receiver', true);
+		  xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		  xhttp.send('{\"kind\":\"showmyaddresses\"}');	
+
+}
+
+
+
+function checkchecker(){
+
+          if(work) return;
+		  working()
+
+		  console.log("checkchecker")
+		  
+		  xhttp.open('POST', 'content_receiver', true);
+		  xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		  xhttp.send('{\"kind\":\"checkchecker\"}');	
+
+}
+
+function startcheck(){
+
+    	 // if(work) return;
+		 // working()
+
+          clearInterval(balanceinterval);
+		  
+		  xhttp.open('POST', 'content_receiver', true);
+		  xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		  xhttp.send('{\"kind\":\"checkwallet\"}');	
+
+          checkfinishcheck = setInterval(checkchecker, 30*1000)
+
+	      //balanceinterval = setInterval(balance, 1000*60)
+          //startcheck();
+}
+
+function AdvancedOptionSave(){
+
+          if(work) return;
+		  working()
+
+		  console.log("AdvancedOptionSave")
+
+		  let sss = document.getElementsByName("walletserverradio")
+   
+		  let custom = false;
+		  let selectedor = ""; 
+
+		  for(i=0; i < sss.length; i++) {
+
+		    
+		    
+		    if(sss[i].checked==true && sss[i].value=="custom"){
+
+		       custom = true;
+		             
+
+		    }
+
+		    if(sss[i].checked==true) {
+
+		      selectedor =sss[i].value
+		      
+		    }
+		   
+		  }  
+		  
+		  
+		  if(custom==true) selectedor = document.getElementById("walletserver").value;
+
+		  var www = document.getElementsByName("walletfolderradio")
+
+		  var walletfolder = ""
+
+		  for(i=0; i < www.length; i++) {
+		     
+		     if(www[i].checked==true) {
+
+		      walletfolder =www[i].value
+		      
+		    }
+		  }
+
+		  var usetor = document.getElementById("usetor").checked;
+
+
+		  
+		  xhttp.open('POST', 'content_receiver', true);
+		  xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		  xhttp.send('{\"kind\":\"advancedoptionssave\" ,\"usetor\":'+usetor+' ,\"epicserveraddress\":\"'+selectedor+'\", \"custom\":'+custom+', \"walletfoldertype\":\"'+walletfolder+'\"}');	
+
+}
+
+function AskNextLanguage(lang){
+
+		if(work) return;
+		  working()
+
+		  console.log("AskNextLanguage")
+
+
+		  xhttp.open('POST', 'content_receiver', true);
+		  xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		  xhttp.send('{\"kind\":\"asknextlanguage\" , \"lang\":\"'+lang+'\"}');	
+
+
+}
+
+function RestoreWallet(){
+
+		if(work) return;
+		  working()
+
+		console.log("RestoreWallet")
+  		xhttp.open('POST', 'content_receiver', true);
+		xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		xhttp.send('{\"kind\":\"restorewallet\" }');	
+
+		return;
+        
+        if(document.getElementById("passrecover").value==document.getElementById("passrecover2").value && document.getElementById("passrecover2").value.length>3 && document.getElementById("recoverphrase").value.length>24  ){
+          
+          document.getElementById("recoverphrase").value = document.getElementById("recoverphrase").value.replace("  "," ")
+          document.getElementById("recoverphrase").value = document.getElementById("recoverphrase").value.replace("   "," ")
+          document.getElementById("recoverphrase").value = document.getElementById("recoverphrase").value.replace("\r","")
+          document.getElementById("recoverphrase").value = document.getElementById("recoverphrase").value.replace("\n","") 
+
+		  xhttp.open('POST', 'content_receiver', true);
+		  xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		  xhttp.send('{\"kind\":\"restorewallet\", \"pass\":\"'+document.getElementById("passrecover").value+'\", \"phrase\":\"'+document.getElementById("recoverphrase").value+'\" }');	
+
+		}
+
+
+}
+
+function clicker(object){
+
+	console.log(object.id)
+
+	if(object.id.indexOf("Cancel")>-1) {
+		object.style.backgroundColor = "#3a3a3a"
+	} else {
+		object.style.backgroundColor = "#997e2f"
+	}
+
+ 	switch(object.id){
+
+ 		case "ReceiveButtonFile":
+
+ 			document.getElementById("new_wallet11").style.display = "none"
+ 			document.getElementById("new_wallet9").style.display = "block"
+
+ 		break;
+        
+ 		case "SendByFile":
+ 			//alert("Send by File")
+ 			SendByFile();
+
+ 		break;
+
+
+
+ 		case "SendByFileCancel":
+
+			document.getElementById("new_wallet6").style.display="none" 			
+ 			
+ 		break;
+
+ 		case "SendByHttp":
+
+ 			SendByHttp();
+ 			
+ 		break;
+
+ 		case "SendByHttpCancel":
+
+			document.getElementById("new_wallet7").style.display="none" 			
+ 			
+ 		break;
+
+ 		 case "FinalizeCancel":
+
+			document.getElementById("new_wallet8").style.display="none" 			
+ 			document.getElementById("FinalizeError").style.display = "none"
+
+ 		break;
+ 		
+ 		case "ReceiveCancel":
+
+			document.getElementById("new_wallet9").style.display="none"
+			document.getElementById("ReceiveError").style.display = "none"
+
+ 			
+ 		break;
+
+
+ 		case "ReceiveThreeCancel":
+
+			document.getElementById("new_wallet11").style.display="none"
+			 			
+ 		break;
+
+ 		case "ReceiveHttpCancel":
+
+			document.getElementById("new_wallet10").style.display="none"
+			document.getElementById("ReceiveHttpError").style.display = "none"
+
+ 			
+ 		break;
+
+ 		case "CreateNewWalletNextCancel":
+ 		    document.getElementById("new_wallet1").style.display = "block"
+ 		    document.getElementById("new_wallet2").style.display = "none"
+ 		    
+ 		break;
+
+ 		case "SendByFileMenu":
+
+ 			document.getElementById("new_wallet6").style.display="block"
+
+ 		break;
+
+
+ 		case "SendByHttpMenu":
+            
+            if(!isNaN(document.getElementById("amount").value) && document.getElementById("amount").value>0){
+            	document.getElementById("new_wallet6").style.display="none"
+ 				document.getElementById("new_wallet7").style.display="block"
+ 				document.getElementById("tosendinlast").innerHTML = document.getElementById("amount").value;
+ 			}
+ 		break;
+
+ 		case "Receive":
+
+ 			document.getElementById("new_wallet11").style.display = "block"
+
+ 		break;
+
+ 		case "FinalizeMenu":
+
+ 			document.getElementById("new_wallet8").style.display="block"
+
+ 		break;
+
+ 		case "ReceiveMenu":
+
+ 			document.getElementById("new_wallet9").style.display="block"
+
+ 		break;
+
+		case "ReceiveHttpMenu":
+
+ 			document.getElementById("new_wallet10").style.display="block"
+
+ 		break;
+
+ 		case "walletLogin":
+ 			//document.getElementById("new_wallet4").style.display = "none"
+ 			//document.getElementById("new_wallet5").style.display = "block"
+ 			if(document.getElementById("passmain").value.length>2)
+ 			login(document.getElementById("passmain").value);
+ 			else alert("Too short password");
+
+ 		break;
+
+ 		case "CreateNewWallet":
+
+ 		    document.getElementById("new_wallet1").style.display = "none"
+ 		    document.getElementById("new_wallet2").style.display = "block"
+
+ 		break;
+
+		case "CreateNewWalletNext":
+
+
+				if(document.getElementById("pass").value == document.getElementById("pass2").value && document.getElementById("pass").value.length>2){
+
+					NewWallet(document.getElementById("pass").value)
+
+				} else {
+
+					// make lines red
+					console.log("Wrong Passwords")
+				}
+ 		    
+ 		break;
+
+ 		case "BackedSeed":
+
+			document.getElementById("new_wallet3").style.display = "none"
+			document.getElementById("new_wallet4").style.display = "block"
+
+ 		break;
+        
+        case "showyellow":
+
+            if(document.getElementById("yellowmore").style.display=="none"){
+
+				document.getElementById("yellowmore").style.display="block"
+				document.getElementById("logoleft").style.display="none"
+				document.getElementById("yellowbackground").style.backgroundPosition = "center center"             	
+            } else {
+
+            	document.getElementById("yellowmore").style.display="none"
+            	document.getElementById("logoleft").style.display="block"
+            	document.getElementById("yellowbackground").style.backgroundPosition = "center 10px"
+            }
+
+        break;
+
+        case "ReceiveByHttp":
+
+        	ReceiveByHttp();
+
+        break;
+
+        case "ReceiveByFast":
+
+        	document.getElementById("new_wallet11").style.display = "none"
+        	document.getElementById("new_wallet12").style.display = "block"
+
+        break;
+
+        case "ReceiveByFastAccept":
+
+        	ReceiveByFast()
+
+        break;
+
+        case "FastCancel":
+
+        	document.getElementById("new_wallet11").style.display = "block"
+        	document.getElementById("new_wallet12").style.display = "none"
+
+        break
+
+        case "ShortFast":
+
+        	RegisterShortAddress();
+
+        break;
+
+        case "ShowMyAddresses":
+
+        	ShowMyAddresses();
+
+        break;
+
+        case "settings":
+
+            document.getElementById("new_wallet13").style.display = "block"
+
+        break;
+
+
+        case "SettingsCancel":
+
+            document.getElementById("new_wallet13").style.display = "none"
+
+        break;
+
+        case "checkwallet":	
+
+        	document.getElementById("new_wallet13").style.display = "none"
+        	document.getElementById("new_wallet14").style.display = "block"
+
+        	startcheck()
+
+        break;
+
+        case "advancedoptions":
+
+        	document.getElementById("new_wallet15").style.display = "block"
+
+
+        break;
+
+        case "advancedoptionscancel":
+
+        	document.getElementById("new_wallet15").style.display = "none"
+
+
+        break;
+
+        case "advancedoptionsave":
+            
+            
+        	AdvancedOptionSave();
+
+        break;
+
+        case "chooselanguage":
+
+        	console.log(object.innerHTML)
+        	document.getElementById("Language").innerHTML = object.innerHTML
+        	AskNextLanguage(object.innerHTML)
+
+        break;
+
+        case "RestoreWallet":
+
+        	document.getElementById("new_wallet16").style.display = "block"
+        	
+
+        break;
+
+        case "StartRestoreWallet":
+
+        	RestoreWallet()
+
+        break;
+
+        case "RestoreWalletCancel":
+
+        	document.getElementById("new_wallet16").style.display = "none"
+        	
+
+        break;
+
+ 	}
+}
+
+function clicker2(object){
+
+	hidehistory()
+	object.style.backgroundColor = "#997e2f"
+	object.style.color = "black"
+
+	switch(object.id){
+
+		case "historyButtonSent":
+            
+            currenttab = "sent"
+            document.getElementById("pagenumber").innerHTML = sentpage 
+            drawHistorySent(sentpage)
+			document.getElementById("historySent").style.display = "block"			
+
+		break;
+
+		case "historyButtonReceived":
+
+			currenttab = "received"
+			document.getElementById("pagenumber").innerHTML = receivedpage
+			drawHistoryReceived(receivedpage)
+			document.getElementById("historyReceived").style.display = "block"
+
+		break;
+
+		case "historyButtonCancelled":
+
+			currenttab = "cancelled" 
+			document.getElementById("pagenumber").innerHTML = cancelledpage
+			drawHistoryCancelled(cancelledpage)
+			document.getElementById("historyCancelled").style.display = "block"		
+
+		break;
+
+		case "historyButtonMore":
+
+			currenttab = "more"
+			document.getElementById("pagenumber").innerHTML = morepage
+			drawMore(morepage)
+			document.getElementById("historyMore").style.display = "block"
+
+		break;
+
+	}
+
+}
+
+function hidehistory(){
+
+	document.getElementById("historySent").style.display = "none"
+	document.getElementById("historyReceived").style.display = "none"
+	document.getElementById("historyCancelled").style.display = "none"
+	document.getElementById("historyMore").style.display = "none"
+
+	document.getElementById("historyButtonSent").style.backgroundColor = "#00000000"
+	document.getElementById("historyButtonReceived").style.backgroundColor = "#00000000"
+	document.getElementById("historyButtonCancelled").style.backgroundColor = "#00000000"
+	document.getElementById("historyButtonMore").style.backgroundColor = "#00000000"
+
+
+	document.getElementById("historyButtonSent").style.color = "white"
+	document.getElementById("historyButtonReceived").style.color = "white"
+	document.getElementById("historyButtonCancelled").style.color = "white"
+	document.getElementById("historyButtonMore").style.color = "white"
+}
+
+/*document.addEventListener("drop", function(event) {
+  event.preventDefault();
+  if ( event.target.className == "dragfinalize" ) {
+    document.getElementById("dragfinalize").style.color = "";
+    event.target.style.border = "";
+    var data = event.dataTransfer.getData("Text");
+    event.target.appendChild(document.getElementById(data));
+  }
+});*/
+
+
+function receivetxfile(){
+
+  
+  if(txfiletowallet){
+
+	  if(work) return;
+	  working()
+	  
+
+	  const reader = new FileReader();
+	  reader.addEventListener('load', (event) => {
+	    try{
+	     //console.log(event.target.result);
+	     var jjj = JSON.parse(event.target.result)
+	     
+	      
+	      xhttp.open('POST', '/txfilereceiver', true);
+	      xhttp.setRequestHeader('Content-type', 'application/json');
+	     // event.target.result = "Pies"
+
+	      //console.log('{\"kind\":\"receivetxfile\",  "filetx":'+event.target.result+'}')
+	      xhttp.send(event.target.result);
+
+	    } catch(error){
+
+	      alert("Not correct tx file")
+	    }
+	  });
+
+	  reader.readAsText(txfiletowallet);
+  }
+     
+}
+
+
+function finalizeresponsefile(){
+
+  
+  if(finalizefiletowallet){
+
+	  if(work) return;
+	  working()
+	  
+
+	  const reader = new FileReader();
+	  reader.addEventListener('load', (event) => {
+	    try{
+	     // console.log(event.target.result);
+	     var jjj = JSON.parse(event.target.result)
+	     
+	      //console.log(JSON.parse(jjj))
+
+	      xhttp.open('POST', '/finalizefilereceiver', true);
+	      xhttp.setRequestHeader('Content-type', 'application/json');
+	      xhttp.send(event.target.result);
+
+	    } catch(error){
+
+	      alert("Not correct response file")
+	    }
+	  });
+	  reader.readAsText(finalizefiletowallet);
+	  }
+     
+}
+
+function pagedown(){
+
+	switch(currenttab){
+
+		case "sent":
+		  if(sentpage==1) return;
+		  drawHistorySent(sentpage-1);
+		  sentpage = sentpage -1;
+		  document.getElementById("pagenumber").innerHTML = sentpage;
+		
+		break;
+
+		case "received":
+		  if(receivedpage==1) return;
+		  drawHistoryReceived(receivedpage -1);
+		  receivedpage = receivedpage - 1;
+		  document.getElementById("pagenumber").innerHTML = receivedpage;
+
+		break;
+
+		case "cancelled":
+		   if(cancelledpage==1) return;
+		   drawHistoryCancelled(cancelledpage -1);
+		   cancelledpage = cancelledpage -1;
+		   document.getElementById("pagenumber").innerHTML = cancelledpage;
+
+		break;
+
+	    case "more":
+		   if(morepage==1) return;
+		   drawMore(morepage -1);
+		   morepage = morepage -1;
+		   document.getElementById("pagenumber").innerHTML = morepage;
+
+		break;
+	}
+}
+
+function pageup(){
+
+	switch(currenttab){
+
+		case "sent":
+		  if((sentpage*4)>=sent.length) return;
+		  drawHistorySent(sentpage+1);
+		  sentpage = sentpage +1;
+		  document.getElementById("pagenumber").innerHTML = sentpage;
+		
+		break;
+
+		case "received":
+		  if((receivedpage*4)>=received.length) return;
+		  drawHistoryReceived(receivedpage + 1);
+		  receivedpage = receivedpage + 1;
+		  document.getElementById("pagenumber").innerHTML = receivedpage;
+
+		break;
+
+		case "cancelled":
+		   if((cancelledpage*4)>=cancelled.length) return;
+		   drawHistoryCancelled(cancelledpage + 1);
+		   cancelledpage = cancelledpage + 1;
+		   document.getElementById("pagenumber").innerHTML = cancelledpage;
+
+		break;
+
+	    case "more":
+		   if((morepage*4)>=more.length) return;
+		   drawMore(morepage + 1);
+		   morepage = morepage + 1;
+		   document.getElementById("pagenumber").innerHTML = morepage;
+
+		break;
+	}
+}
+
+
+function searcher(){
+
+   //console.log(document.getElementById("searchtransactions").value)
+
+   switch(currenttab){
+
+   		case "sent":
+         
+         searchsent();
+
+   		break;
+
+   		case "received":
+
+   		 searchreceived();	
+
+   		break;
+
+   		case "cancelled":
+
+   		 searchcancelled();
+
+   		break;
+
+   }
+
+}
+
+
+function searchcancelled(){
+
+	var tosearch = document.getElementById("searchtransactions").value 
+    
+    if(tosearch.length < 3) { document.getElementById("historyCancelled").innerHTML=""; return; }
+
+
+	var row = ""
+    
+    
+    
+	for(i=0; i<cancelled.length; i=i+1){
+
+		let confirmed = "none";
+	    let sending = "Canceled"
+	    let icon = "icon-tx-canceled"
+	    let tx_slate_id = ""
+	    let messages = []
+	    let msg = "" 
+	    let amount = ""
+	    let fee = ""
+	    let date = ""
+	    let id = -1
+
+        
+        id = cancelled[i].id
+
+         
+        	confirmed = "none";
+        	sending = "Canceled" 
+        	icon = "icon-tx-canceled"
+        	date = new Date(cancelled[i].creation_ts).toLocaleString()
+        
+
+        tx_slate_id = cancelled[i].tx_slate_id;
+        
+        messages = []
+        
+        if(cancelled[i].messages!=null){
+
+	        for(m = 0; m<cancelled[i].messages.messages.length; m=m+1){
+
+	        	messages.push(cancelled[i].messages.messages[m].message)
+	        }
+
+	        if(messages[0]!=null) msg = messages[0]; else msg = "";
+    	} else msg="";
+        
+        amount = ((Number(cancelled[i].amount_credited) - Number(cancelled[i].amount_debited))/1e8).toFixed(tofixed)
+
+        //fee = (Number(receuved[i].fee)/1e8).toFixed(tofixed)
+        if(amount.search(tosearch)>-1 || tx_slate_id.search(tosearch)>-1 || msg.search(tosearch)>-1 || date.search(tosearch)>-1 )
+	    row = row +  `<div class="w3-cell-row" style="width: 100%; align-items: left"><div class="w3-cell" style="vertical-align: middle;"><img src="/${icon}" style="height: 45px;width: 45px"></div><div class="w3-cell" style="width: 100%" ><div class="w3-cell-row " style="vertical-align: top" ><div class="w3-cell w3-text-white w3-medium" style="width:70%; text-align: left;padding-left: 10px">${sending} <button class="w3-btn w3-round-large w3-small" style="display:${confirmed}" onclick="canceltransaction(${id})" >Cancel</button></div><div class="w3-cell w3-text-white w3-medium" style="width:30%; text-align: right">${amount}</div></div><div class="w3-cell-row " style="color: #828282" ><div class="w3-cell w3-small" style="width:70%; text-align: left;  padding-left: 10px">${tx_slate_id}  <span class="w3-text-white" style=" ">${msg}</span></div><div class="w3-cell w3-small" style="width:30%; text-align: right">${date}</div></div></div></div><hr style="margin-top: 5px;">`;
+
+	}
+
+	document.getElementById("historyCancelled").innerHTML = row;
+
+
+}
+
+function searchsent(){
+
+    var tosearch = document.getElementById("searchtransactions").value 
+    
+    if(tosearch.length < 3) { document.getElementById("historySent").innerHTML=""; return; }
+
+
+	var row = ""
+     
+    //console.log("sent search") 
+    
+	for(i=0; i<sent.length; i=i+1){
+
+	    let confirmed = "none";
+	    let sending = "Sending..."
+	    let icon = "icon-tx-sending-progress"
+	    let tx_slate_id = ""
+	    let messages = []
+	    let msg = "" 
+	    let amount = ""
+	    let fee = ""
+	    let date = ""
+	    let id = -1;
+
+		id = sent[i].id
+        
+        if(sent[i].confirmed) { 
+        	confirmed = "none";
+        	sending = "Sent" 
+        	icon = "icon-tx-sent"
+        	date = new Date(sent[i].confirmation_ts).toLocaleString()
+        } else { 
+        	confirmed = "block"
+        	sending = "Sending..." 
+        	icon = "icon-tx-sending-progress"
+        	date = new Date(sent[i].creation_ts).toLocaleString()
+        }
+
+        tx_slate_id = sent[i].tx_slate_id;
+
+        messages = []
+
+        if(sent[i].messages!=null){
+
+	        for(m = 0; m<sent[i].messages.messages.length; m=m+1){
+
+	        	messages.push(sent[i].messages.messages[m].message)
+	        }
+
+	        if(messages[0]!=null) msg = messages[0]; else msg = "";
+    	} else msg="";
+
+        amount = ((Number(sent[i].amount_credited) - Number(sent[i].amount_debited))/1e8).toFixed(tofixed)
+
+        fee = (Number(sent[i].fee)/1e8).toFixed(tofixed)
+
+        if(amount.search(tosearch)>-1 || tx_slate_id.search(tosearch)>-1 || msg.search(tosearch)>-1 || date.search(tosearch)>-1 )
+	    row = row +  `<div class="w3-cell-row" style="width: 100%; align-items: left"><div class="w3-cell" style="vertical-align: middle;"><img src="/${icon}" style="height: 45px;width: 45px"></div><div class="w3-cell" style="width: 100%" ><div class="w3-cell-row " style="vertical-align: top" ><div class="w3-cell w3-text-white w3-medium" style="width:70%; text-align: left;padding-left: 10px">${sending} <button class="w3-btn w3-round-large w3-small" style="display:${confirmed}" onclick='canceltransaction(${id})'>Cancel</button></div><div class="w3-cell w3-text-white w3-medium" style="width:30%; text-align: right">${amount} (fee ${fee})</div></div><div class="w3-cell-row " style="color: #828282" ><div class="w3-cell w3-small" style="width:70%; text-align: left;  padding-left: 10px">${tx_slate_id}  <span class="w3-text-white" style=" ">${msg}</span></div><div class="w3-cell w3-small" style="width:30%; text-align: right">${date}</div></div></div></div><hr style="margin-top: 5px;">`;
+
+	}
+
+	document.getElementById("historySent").innerHTML = row;
+
+}
+
+function searchreceived(){
+
+    var tosearch = document.getElementById("searchtransactions").value 
+    
+    if(tosearch.length < 3) { document.getElementById("historyReceived").innerHTML=""; return; }
+
+    //console.log(tosearch)
+
+	var row = ""
+
+    
+	for(i=0; i<received.length; i=i+1){
+
+		let confirmed = "none";
+	    let sending = "Sending..."
+	    let icon = "icon-tx-sending-progress"
+	    let tx_slate_id = ""
+	    let messages = []
+	    let msg = "" 
+	    let amount = ""
+	    let fee = ""
+	    let date = ""
+	    let id = -1
+
+        
+        id = received[i].id
+
+        if(received[i].confirmed) { 
+        	confirmed = "none";
+        	sending = "Received" 
+        	icon = "icon-tx-received"
+        	date = new Date(received[i].confirmation_ts).toLocaleString()
+        } else { 
+        	confirmed = "block"
+        	sending = "Receiving..." 
+        	icon = "icon-tx-receiving-progress"
+        	date = new Date(received[i].creation_ts).toLocaleString()
+        }
+
+        tx_slate_id = received[i].tx_slate_id;
+        
+        messages = []
+
+        if(received[i].messages!=null){
+
+	        for(m = 0; m<received[i].messages.messages.length; m=m+1){
+
+	        	messages.push(received[i].messages.messages[m].message)
+	        }
+
+	        if(messages[0]!=null) msg = messages[0]; else msg = "";
+    	} else msg="";
+        amount = ((Number(received[i].amount_credited) - Number(received[i].amount_debited))/1e8).toFixed(tofixed)
+
+        //fee = (Number(receuved[i].fee)/1e8).toFixed(tofixed)
+
+       if(amount.search(tosearch)>-1 || tx_slate_id.search(tosearch)>-1 || msg.search(tosearch)>-1 || date.search(tosearch)>-1 ) 
+	    row = row +  `<div class="w3-cell-row" style="width: 100%; align-items: left"><div class="w3-cell" style="vertical-align: middle;"><img src="/${icon}" style="height: 45px;width: 45px"></div><div class="w3-cell" style="width: 100%" ><div class="w3-cell-row " style="vertical-align: top" ><div class="w3-cell w3-text-white w3-medium" style="width:70%; text-align: left;padding-left: 10px">${sending} <button class="w3-btn w3-round-large w3-small" style="display:${confirmed}" onclick="canceltransaction(${id})" >Cancel</button></div><div class="w3-cell w3-text-white w3-medium" style="width:30%; text-align: right">${amount}</div></div><div class="w3-cell-row " style="color: #828282" ><div class="w3-cell w3-small" style="width:70%; text-align: left;  padding-left: 10px">${tx_slate_id}  <span class="w3-text-white" style=" ">${msg}</span></div><div class="w3-cell w3-small" style="width:30%; text-align: right">${date}</div></div></div></div><hr style="margin-top: 5px;">`;
+
+	}
+
+	document.getElementById("historyReceived").innerHTML = row;
+
+}
+
+
+function copyfastaddress() {
+  /* Get the text field */
+  var copyText = document.getElementById("fastaddress");
+
+  /* Select the text field */
+  copyText.select();
+  copyText.setSelectionRange(0, 99999); /*For mobile devices*/
+
+  /* Copy the text inside the text field */
+  document.execCommand("copy");
+
+  /* Alert the copied text */
+  alert("Copied the text: " + copyText.value);
+} 
+
+</script>	
+
+<body onload="starter()" class="body">
+
+  <img src="/blacklogo" class="blacklogo" style="display: none">
+  <div style="background-image: linear-gradient(0deg, #0c0c0b, #262626 );
+		background-repeat:no-repeat;  
+		background-size: 100%;  
+		background-position: center center; width: 100%; height: 450px"></div>
+  <div style="width:100%; position: absolute; top:15px">
+	  <div id="new_wallet1" class="w3-display-container w3-margin w3-center" style="display:none; width: 100%;height:620px; ">
+	     <div class="w3-display-middle">
+	     	<img   src="/epic_cash" style="width: 60%">
+	     	<br>
+	     	<button id="CreateNewWallet" name="w0" class="w3-btn w3-round-xlarge w3-margin-top " style="background-color: #e0b13d" onmouseover='changeColor(this,"#e8c878")' onmouseout='changeColor(this,"#e0b13d")' onclick='clicker(this)'>CREATE NEW WALLET</button>
+	     	<br>
+	     		<button id="RestoreWallet" class="w3-btn  w3-round-xlarge  w3-small w3-rubik w3-margin-top" style="background-color: #e0b13d" onmouseover='changeColor(this,"#e8c878")' onmouseout='changeColor(this,"#e0b13d")' onclick='clicker(this)'>Restore Wallet</button>
+		     	<button id="advancedoptions" class="w3-btn w3-round-xlarge  w3-small w3-rubik w3-margin-top" style="background-color: #e0b13d" onmouseover="changeColor(this,'#e8c878')" onmouseout="changeColor(this,'#e0b13d')" onclick="clicker(this)" >Advanced options</button>	
+	     </div>	
+	  </div>
+
+
+	  <div id="new_wallet16" class="w3-display-container w3-margin w3-modal w3-center" style="display:none;width: 100%; ">
+	  	<div class="w3-display-middle">
+	  	  <div class="w3-container w3-padding w3-round-large" style="background: #3a3a3aff; width:400px">		
+		      <div class="w3-center" style="padding: 30px">
+		         <div  name="w63" class="w3-center w3-text-white w3-xlarge w3-rubik ">
+			     		<b>Restore Wallet</b>
+			     </div> 
+			     <div class="w3-center w3-xlarge w3-rubik w3-margin-top">
+
+					
+			     		
+
+					<div class="w3-cell-row w3-margin-bottom">
+			     		<div  name="w64" class="w3-cell w3-small w3-rubik w3-text-white" style="width: 100%; ">
+
+                    	 To restore wallet you must have not seed file in wallet_data folder and not epic-wallet.toml file in folder where you will restore wallet. For Default option it is .epic/main folder and for Local it is application folder. Prepare your restore phrase and new password. Use it in command console. After Restore success please login and start checking which take a while so time for a cup of coffee.
+
+						</div>
+
+
+			     		
+			     	</div>
+
+			     	<div class="w3-cell-row w3-margin-bottom">
+			     		<div  class="w3-cell w3-small w3-rubik w3-text-white" style="width: 100%; ">
+
+						<textarea id="recoverphrase" class="w3-input" placeholder="Input here recover phrase - words divided by spaces"></textarea>
+							
+							                    	 
+
+						</div>	
+			     		
+			     	</div>
+
+				    <div name="w65" class="w3-margin-top w3-small w3-rubik" style="color:#e0b13d; text-align:left; display: none">
+			     		New Password
+			     	</div>
+			     	<div class="w3-row w3-section w3-small" style="display: none">
+				     	<div class="w3-col" style="width:100%">	
+					     	<input class="w3-input w3-margin-bottom" id="passrecover" type="password" name="pass" style="background-color: #3a3a3a; color: white">
+					     	<input class="w3-input w3-margin-bottom w3-rubik" id="passrecovervisible" type="text" type="text" name="passvisible" style="background-color: #3a3a3a; color: white; display: none ">
+
+					    </div>
+					     	
+			     	</div>
+
+				    <div class="w3-row w3-section w3-small" style="display: none">
+				     	<div class="w3-col" style="width:100%">
+					     	<input class="w3-input w3-margin-bottom" type="password" placeholder="Confrim password" id="passrecover2"  name="pass" style="background-color: #3a3a3a; color: white">
+					     	<input class="w3-input w3-margin-bottom w3-rubik" placeholder="Confrim password" id="passrecover2visible" type="text" name="pass" type="text" style="background-color: #3a3a3a; color: white; display: none">
+					    </div>
+					    
+					</div>
+			        
+	  		    </div>
+
+	  		  		<button id="StartRestoreWallet" name="w66" class="w3-btn  w3-round-xlarge  w3-small w3-rubik" style="background-color: #e0b13d" onmouseover='changeColor(this,"#e8c878")' onmouseout='changeColor(this,"#e0b13d")' onclick='clicker(this)'>Start Restore Wallet</button>
+			     	
+			     	<button id="RestoreWalletCancel" name="w67" class="w3-btn  w3-round-xlarge  w3-small w3-rubik w3-text-white" style="background-color: #4c4c4c" onmouseover='changeColor(this,"#828282")' onmouseout='changeColor(this,"#4c4c4c")' onclick='clicker(this)'>Cancel</button>
+	  		  </div>
+	  	  
+	  	  </div>	
+	  	</div>
+	  </div>
+
+	  <div id="new_wallet15" class="w3-display-container w3-margin w3-modal w3-center" style="display:none;width: 100%; ">
+	  	<div class="w3-display-middle">
+	  	  <div class="w3-container w3-padding w3-round-large" style="background: #3a3a3aff; width:400px">		
+		      <div class="w3-center" style="padding: 30px">
+		         <div name="w5" class="w3-center w3-text-white w3-xlarge w3-rubik ">
+			     		<b>Advanced Options</b>
+			     </div> 
+			     <div class="w3-center w3-xlarge w3-rubik w3-margin-top">
+
+					
+			     		
+                    <hr>
+					<div class="w3-small w3-text-white" style="width:100%">
+			           <div class="w3-margin-bottom" name="w6">Epic Servers</div> 
+			            <div class="left w3-margin-top" style="width: 60%; display: inline; ">
+			              
+			              <input class="w3-left" name="walletserverradio" type="radio" style="display: inline;" value="https://fastepic.eu:3413">
+			              <label for="walletserverradio" class="w3-left" style="margin-left: 10px">https://fastepic.eu:3413</label>
+			            </div>
+			            <br><br>
+			            <div class="" style="width: 60%; display: inline;">
+			              
+			              <input class="w3-left" name="walletserverradio" type="radio" style="display: inline;" value="http://116.203.211.229:3413">
+			              <label for="walletserverradio" class="w3-left" style="margin-left: 10px">http://116.203.211.229:3413</label>
+			            </div>
+			            <br><br>
+			            <div class="" style="width: 60%; display: inline;">
+			              
+			              <input class="w3-left" name="walletserverradio" type="radio" style="display: inline;" value="http://95.216.215.107:3413">
+			              <label for="walletserverradio" class="w3-left" style="margin-left: 10px">http://95.216.215.107:3413</label>
+			            </div>
+			            <br><br>
+			            <div class="" style="width: 60%; display: none;">
+			              
+			              <input class="w3-left" name="walletserverradio" type="radio" style="display: inline;" value="http://epic.ex4ange.org:3413">
+			              <label for="walletserverradio" class="w3-left" style="margin-left: 10px">http://epic.ex4ange.org:3413</label>
+			              <br><br>
+			            </div>
+			            
+			            <div class="w3-margin-top" style="width: 60%; display: inline;">
+			              
+			              <input class="w3-left" name="walletserverradio" type="radio" style="display: inline;" value="custom">
+			              <label for="walletserverradio" class="w3-left" style="margin-left: 10px">custom</label>
+			            </div>
+			            <br><br>
+			            <input class="w3-input w3-sand w3-round-large"  id="walletserver" name="walletserver" type="text" style="width:60%; display: inline" value="http://localhost:3413" >
+			        </div>
+                    <hr>
+			        <div  class="w3-margin-top w3-small w3-text-white">
+			            <div name="w7" class="w3-margin-bottom">Wallet data folder</div>           
+			            <div class="w3-margin-top" style="width: 60%; display: inline;">
+			              
+			              <input class="" name="walletfolderradio" type="radio" style="display: inline;" value="Standard">
+			              <label for="walletfolderradio" class="" style="margin-left: 10px">Standard</label>
+			              
+			              <input class="" name="walletfolderradio" type="radio" style="display: inline;margin-left: 10px" value="Local">
+			              <label for="walletfolderradio" class="" style="margin-left: 10px">Local</label>
+			            </div>
+		            </div>
+		            <hr>
+		            <div  class="w3-margin-top w3-small w3-text-white">
+			                      
+			            <div class="w3-margin-top w3-center" style="width: 100%;">
+			              
+			              <input id="usetor" class="" name="usetor" type="checkbox" style="display: inline;" value="usetor" checked="false">
+			              <label for="usetor" class="" style="margin-left: 10px">Use TOR</a> - must install <a href="https://www.torproject.org/download/" target="_blank">TOR</a> and <a href="https://curl.se/" target="_blank">CURL</a></label>
+			              
+			            </div>
+		            </div>	
+					<hr>
+					<button id="advancedoptionsave" name="w8" class="w3-btn  w3-round-xlarge  w3-small w3-rubik" style="background-color: #e0b13d" onmouseover='changeColor(this,"#e8c878")' onmouseout='changeColor(this,"#e0b13d")' onclick='clicker(this)'>Save</button>
+			     	
+			     	<button id="advancedoptionscancel" name="w9" class="w3-btn  w3-round-xlarge  w3-small w3-rubik w3-text-white" style="background-color: #4c4c4c" onmouseover='changeColor(this,"#828282")' onmouseout='changeColor(this,"#4c4c4c")' onclick='clicker(this)'>Cancel</button>
+			     	
+			     	
+	  		    </div>
+	  		  </div>
+	  	      
+			        
+	  	  </div>	
+	  	</div>
+	  </div>
+
+	  <div id="new_wallet14" class="w3-display-container w3-margin w3-modal w3-center" style="display:none;width: 100%; ">
+	  	<div class="w3-display-middle">
+	  	  <div class="w3-container w3-padding w3-round-large" style="background: #3a3a3aff; width:400px">		
+		      <div class="w3-center" style="padding: 30px">
+		         <div name="w1" class="w3-center w3-text-white w3-xlarge w3-rubik ">
+			     		<b>Checking Wallet</b>
+			     </div> 
+			     <div class="w3-center w3-xlarge w3-rubik w3-margin-top">
+
+					
+			     		
+
+					<div class="w3-cell-row w3-margin-bottom">
+			     		<div name="w2" class="w3-cell w3-small w3-rubik w3-text-white" style="width: 100%; ">
+
+                    	 Please wait, take a cup of coffee and don't disconnect internet.
+
+						</div>	
+			     		
+			     	</div>
+
+			     	<div class="w3-cell-row w3-margin-bottom">
+			     		<div id="checkinfo" class="w3-cell w3-small w3-rubik w3-text-white" style="width: 100%; ">
+
+                    	 
+
+						</div>	
+			     		
+			     	</div>
+			        
+	  		    </div>
+	  		  </div>
+	  	  
+	  	  </div>	
+	  	</div>
+	  </div>
+
+
+	  <div id="new_wallet13" class="w3-display-container w3-margin w3-modal w3-center" style="display:none;width: 100%; ">
+	  	<div class="w3-display-middle">
+	  	  <div class="w3-container w3-padding w3-round-large" style="background: #3a3a3aff; width:400px">		<button id="SettingsCancel" class="w3-btn w3-left w3-round-large" style="background-color:#3a3a3a; display: block"  onclick="clicker(this)"> < </button>
+		      
+		      <div class="w3-center" style="padding: 30px">
+		         <div name="w3" class="w3-center w3-text-white w3-xlarge w3-rubik ">
+			     		<b>Settings & Help</b>
+			     </div> 
+			     <div class="w3-center w3-xlarge w3-rubik w3-margin-top">
+
+					
+			     		
+
+					<div class="w3-cell-row w3-margin-bottom">
+			     		<div name="w4" class="w3-cell w3-small w3-rubik w3-text-white" style="width: 100%; ">
+
+                    	 Check wallet operation is long time. All your wallet processes will be stoped. Wallet will be look like frozen long time. Take a cup of coffe and wait. After finish checking wallet will start work.
+
+						</div>	
+			     		
+			     	</div>
+
+			     	<div class="w3-cell-row w3-margin-bottom">
+			     		<div class="w3-cell w3-small w3-rubik" style="width: 100%; ">
+
+							<button id="checkwallet" name="w10" class="w3-btn  w3-round-xlarge  w3-small w3-rubik" style="background-color: #e0b13d" onmouseover='changeColor(this,"#e8c878")' onmouseout='changeColor(this,"#e0b13d")' onclick='clicker(this)' >Check Wallet</button>
+
+						</div>	
+			     		
+			     	</div>
+
+			        
+	  		    </div>
+	  		  </div>
+	  	  
+	  	  </div>	
+	  	</div>
+	  </div>
+
+
+
+	  <div id="new_wallet12" class="w3-display-container w3-margin w3-modal w3-center" style="display:none;width: 100%; ">
+	  	<div class="w3-display-middle">
+	  	  <div class="w3-container w3-padding w3-round-large" style="background: #3a3a3aff; width:400px">		<button id="FastCancel" class="w3-btn w3-left w3-round-large" style="background-color:#3a3a3a; display: block"  onclick="clicker(this)"> < </button>
+		      
+		      <div class="w3-center" style="padding: 30px">
+		         <div name="w11" class="w3-center w3-text-white w3-xlarge w3-rubik ">
+			     		<b>Easy Receive</b>
+			     </div> 
+			     <div class="w3-center w3-xlarge w3-rubik w3-margin-top">
+
+					<div class="w3-cell-row w3-margin-top" style="display: none">
+			     		<div name="w12" class="w3-cell w3-small w3-text-white">
+			     			Your external deposit address. It is long text.	
+			     		</div>	
+			     	</div>
+
+			     	<div class="w3-cell-row w3-margin-bottom" style="display: none">
+			     		<div class="w3-cell" style="width: 100%; ">
+
+			     			<input class="w3-input w3-small" id="fastaddress" style="background-color: #3a3a3a; color: lightgrey; ">
+			     				
+			     		</div>	
+			     		
+			     	</div>
+	
+
+					<div class="w3-cell-row w3-margin-bottom">
+
+			     		<div class="w3-cell w3-small w3-text-white w3-rubik" style="width: 50%;">
+			     		     https://fastepic.eu/
+			     		</div>
+			     		<div class="w3-cell" style="width: 50%;">
+                            
+			     			<input class=" w3-cell w3-input w3-small w3-rubik" id="shortfastaddress" style="background-color: #3a3a3a; color: lightgrey; width:100%" placeholder="Choose address">
+			     				
+			     		</div>
+	
+			     		
+			     	</div>	
+
+					<div class="w3-cell-row w3-margin-bottom">
+			     		<div name="w13" class="w3-cell w3-small w3-rubik w3-text-white" style="width: 100%; ">
+
+                    	 If you are a new user click the register new address button below.
+
+						</div>	
+			     		
+			     	</div>
+
+			     	<div class="w3-cell-row w3-margin-bottom">
+			     		<div class="w3-cell w3-small w3-rubik" style="width: 100%; ">
+
+							<button id="ShowMyAddresses" name="w14" class="w3-btn  w3-round-xlarge  w3-small w3-rubik" style="background-color: #e0b13d" onmouseover='changeColor(this,"#e8c878")' onmouseout='changeColor(this,"#e0b13d")' onclick='clicker(this)' >Show My Addresses</button>
+
+						</div>	
+			     		
+			     	</div>
+
+			        <div class="w3-cell-row w3-margin-bottom">
+			     		<div id="myaddresses" class="w3-cell w3-small w3-rubik w3-text-sand" style="width: 100%; ">
+
+					
+						</div>	
+			     		
+			     	</div>
+
+			     	<div class="w3-cell-row w3-margin-bottom">
+			     		<div name="w15" class="w3-cell w3-small w3-rubik w3-text-white" style="width: 100%; ">
+
+                    	 Once you have completed the easy receive transaction you can close this wallet. 
+						 The transfer will happen automatically in the following 30 minutes.
+
+						</div>	
+			     		
+			     	</div>
+
+		  		  	<button id="ReceiveByFastAccept" name="w16" class="w3-btn w3-round-xlarge  w3-small w3-rubik" style="background-color: #e0b13d; display: none" onmouseover='changeColor(this,"#e8c878")' onmouseout='changeColor(this,"#e0b13d")' onclick='clicker(this)'>Start Easy Receive</button>
+		  		  	<button id="CopyFastAddress" name="w17" class="w3-btn  w3-round-xlarge  w3-small w3-rubik" style="background-color: #e0b13d; display: none;" onmouseover='changeColor(this,"#e8c878")' onmouseout='changeColor(this,"#e0b13d")' onclick='copyfastaddress()' >Copy address</button>
+		  		  	<button id="ShortFast" name="w18" class="w3-btn  w3-round-xlarge  w3-small w3-rubik" style="background-color: #e0b13d" onmouseover='changeColor(this,"#e8c878")' onmouseout='changeColor(this,"#e0b13d")' onclick='clicker(this)' >Register new address</button>
+	  		    </div>
+	  		  </div>
+	  	  
+	  	  </div>	
+	  	</div>
+	  </div>
+
+	  <div id="new_wallet11" class="w3-display-container w3-margin w3-modal w3-center" style="display:none;width: 100%; ">
+	  	<div class="w3-display-middle">
+	  	  <div class="w3-container w3-padding w3-round-large" style="background: #3a3a3aff; width:400px">		<button id="ReceiveThreeCancel" class="w3-btn w3-left w3-round-large" style="background-color:#3a3a3a; display: block"  onclick="clicker(this)"> < </button>
+		      
+		      <div class="w3-center"  style="padding: 30px">
+		         <div name="w19" class="w3-center w3-text-white w3-xlarge w3-rubik ">
+			     		Choose method
+			     </div> 
+			     <div class="w3-center w3-xlarge w3-rubik w3-margin-top">
+				     <button id="ReceiveByHttp" name="w20" class="w3-btn w3-round-xlarge  w3-small w3-rubik  w3-margin-right" style="background-color: #e0b13d" onmouseover='changeColor(this,"#e8c878")' onmouseout='changeColor(this,"#e0b13d")' onclick='clicker(this)'>Direct</button>  
+		  		  	<button id="ReceiveButtonFile" name="w21" class="w3-btn w3-round-xlarge  w3-small w3-rubik  w3-margin-right" style="background-color: #e0b13d" onmouseover='changeColor(this,"#e8c878")' onmouseout='changeColor(this,"#e0b13d")' onclick='clicker(this)'>Files</button>
+
+		  		  	<button id="ReceiveByFast" name="w22" class="w3-btn w3-round-xlarge  w3-small w3-rubik" style="background-color: #e0b13d" onmouseover='changeColor(this,"#e8c878")' onmouseout='changeColor(this,"#e0b13d")' onclick='clicker(this)'>Easy</button>
+	  		    </div>
+	  		  </div>
+	  	  
+	  	  </div>	
+	  	</div>
+	  </div>
+	  <div id="new_wallet10" class="w3-display-container w3-margin w3-modal w3-center" style="display:none;width: 100%;height:620px; ">
+	  	<div class="w3-display-middle">
+         
+     	  	<div class="w3-container w3-padding w3-round-large" style="background: #3a3a3add; width:400px">	
+	     	  	<button id="ReceiveHttpCancel" class="w3-btn w3-left w3-round-large" style="background-color:#3a3a3a; display: block"  onclick="clicker(this)"> < </button>
+		        <div style="padding: 30px">
+		      		<div class="w3-center w3-text-white w3-xlarge w3-rubik ">
+			     		<b>Receive(HTTP/HTTPS)</b>
+			     	</div>
+			     	<div id="ReceiveHttpError" class="w3-small w3-margin-top w3-padding w3-rubik" style="color:#9a3328;background-color:#2d2d2d; display:none; ">
+			     		Recieve HTTP/HTTPS Error.
+			     	</div>
+
+			     	<div  class="w3-small w3-margin-top w3-padding w3-rubik" style="color:#828282;background-color:#2d2d2d; display:block; ">
+                        <div  style="color:#e0b13d; text-align: center">
+			     		Attention
+			     		</div>
+						To start HTTP listen, you should have public ip, which is reachable by internet user.
+                        You can use fastepic.eu retransimiter if you can't open port or haven't static ip - cost 1 Epic Cash for each transaction.
+			     		
+			     	</div>
+
+			     	<button id="ReceiveByHttp" class="w3-btn w3-round-xlarge  w3-small w3-rubik  w3-margin-top w3-margin-right" style="background-color: #e0b13d" onmouseover='changeColor(this,"#e8c878")' onmouseout='changeColor(this,"#e0b13d")' onclick='clicker(this)'>Receive</button>
+			     	<button id="ReceiveByFast" class="w3-btn w3-round-xlarge  w3-small w3-rubik w3-margin-top w3-margin-left" style="background-color: #e0b13d" onmouseover='changeColor(this,"#e8c878")' onmouseout='changeColor(this,"#e0b13d")' onclick='clicker(this)'>Receive by Fast</button>
+			     		
+			    </div> 	
+
+	     	</div>	
+	 	</div>
+	  </div>
+	  <div id="new_wallet8" class="w3-display-container w3-margin w3-modal w3-center" style="display:none;width: 100%;height:620px; ">
+	  	<div class="w3-display-middle">
+         
+     	  	<div class="w3-container w3-padding w3-round-large" style="background: #3a3a3aff; width:400px">	
+	     	  	<button id="FinalizeCancel" class="w3-btn w3-left w3-round-large" style="background-color:#3a3a3a; display: block"  onclick="clicker(this)"> < </button>
+		        <div style="padding: 30px">
+		      		<div name="w23" class="w3-center w3-text-white w3-xlarge w3-rubik ">
+			     		<b>Finalize</b>
+			     	</div>
+			     	<div id="FinalizeError" name="w24" class="w3-small w3-margin-top w3-padding w3-rubik" style="color:#9a3328;background-color:#2d2d2d; display:none; ">
+			     		Finalize error.
+			     	</div>
+			     	<div id="dragfinalize" class="w3-margin-top w3-border w3-border-white" style="height: 300px; width: 100% ; background-color:#3a3a3a; vertical-align: middle; " >
+			     		<div class="w3-text-white w3-rubik" name="w25" >Drop response transaction file to finalize or browse file</div>
+			     	</div>
+			     	<input type="file" class="w3-button w3-sand w3-round-large w3-margin-top w3-rubik"  id="finalizefiletowallet" accept=".response" style="width: 100%">	
+			    </div> 	
+
+	     	</div>	
+	 	</div>
+	  </div>
+	  <div id="new_wallet9" class="w3-display-container w3-margin w3-modal w3-center" style="display:none;width: 100%;height:620px; ">
+	  	<div class="w3-display-middle">
+         
+     	  	<div class="w3-container w3-padding w3-round-large" style="background: #3a3a3aff; width:400px">	
+	     	  	<button id="ReceiveCancel" class="w3-btn w3-left w3-round-large" style="background-color:#3a3a3a; display: block"  onclick="clicker(this)"> < </button>
+		        <div style="padding: 30px">
+		      		<div name="w26" class="w3-center w3-text-white w3-xlarge w3-rubik ">
+			     		<b>Receive</b>
+			     	</div>
+			     	<div id="ReceiveError" name="w27" class="w3-small w3-margin-top w3-padding w3-rubik" style="color:#9a3328;background-color:#2d2d2d; display:none; ">
+			     		Receive error.
+			     	</div>
+			     	<div id="dragresponse" class="w3-margin-top w3-border w3-border-white" style="height: 300px; width: 100% ; background-color:#3a3a3a; vertical-align: middle;" >
+			     		
+			     		<div class="w3-text-white w3-rubik" name="w28" >Drop transaction file received or browse file</div>
+			     	</div>
+			     	<input type="file" class="w3-button w3-sand w3-round-large w3-margin-top w3-rubik"  id="txfiletowallet" accept=".tx" style="width: 100%">	
+			    </div> 	
+
+	     	</div>	
+	 	</div>
+	  </div>
+
+	  <div id="new_wallet7" class="w3-display-container w3-margin w3-modal w3-center" style="display:none;width: 100%;height:620px; ">
+	  	<div class="w3-display-middle">
+         
+     	  	<div class="w3-container w3-padding w3-round-large" style="background: #3a3a3aff; width:400px">	
+	     	  	<button class="w3-btn w3-left w3-round-large" style="background-color:#3a3a3a; display: none"> < </button>
+		        <div style="padding: 30px">
+		      		<div name="w29" class="w3-center w3-text-white w3-xlarge w3-rubik ">
+			     		<b>Send Direct</b>
+			     	</div>
+			     	<div name="w30" class="w3-small w3-margin-top w3-padding w3-rubik" style="color:#828282;background-color:#2d2d2d; display:none; ">
+			     		Not enough funds. Please remember about miners fee.
+			     	</div>
+
+			     	<div class="w3-row w3-section">
+
+				     	<div class="w3-col" style="width:99%">	
+					     	<input  class="w3-input w3-margin-bottom" placeholder="Enter http/https address" id="httpdest" type="text" name="httpdest" style="background-color: #3a3a3a; color: white;">					     	
+
+					    </div>
+					    	
+			     	</div>
+
+			     	<div class="w3-row w3-section" style="display: none">
+
+				     	<div class="w3-col" style="width:99%">	
+					     	<input  class="w3-input " placeholder="Enter amount to send" id="httpamount" type="text" name="httpamount" style="background-color: #3a3a3a; color: white;">					     	
+
+					    </div>
+					    	
+			     	</div>
+
+			     	<div class="w3-row w3-section" >
+
+				     	<div class="w3-col w3-center w3-text-white" style="width:100%">	
+					     	<b><span id="tosendinlast"></span> EPICS</b>
+					    </div>
+					    	
+			     	</div>
+
+			        <button id="SendByHttp" name="w31" class="w3-btn w3-round-xlarge  w3-small w3-rubik but" style="background-color: #e0b13d" onmouseover='changeColor(this,"#e8c878")' onmouseout='changeColor(this,"#e0b13d")' onclick='clicker(this)'>Create Transaction</button>
+			        <button id="SendByHttpCancel" name="w9" class="w3-btn w3-round-xlarge w3-margin-left w3-text-white w3-small w3-rubik" style="background-color: #4c4c4c" onmouseover='changeColor(this,"#828282")' onmouseout='changeColor(this,"#4c4c4c")' onclick='clicker(this)'>Cancel</button>
+			    </div>
+
+	     	</div>	
+	 	</div>
+	  </div>
+	  <div id="new_wallet6" class="w3-display-container w3-margin w3-modal w3-center" style="display:none;width: 100%;height:620px; ">
+	  	<div class="w3-display-middle">
+         
+     	  	<div class="w3-container w3-padding w3-round-large" style="background: #3a3a3aff; width:400px">	
+	     	  	<button id="SendByFileCancel" class="w3-btn w3-left w3-round-large" style="background-color:#3a3a3a; display: block" onclick="clicker(this)"> < </button>
+		        <div style="padding: 30px">
+		      		<div name="w32" class="w3-center w3-text-white w3-xlarge w3-rubik ">
+			     		<b>Send</b>
+			     	</div>
+			     	<div name="w33" class="w3-small w3-margin-top w3-padding w3-rubik" style="color:#828282;background-color:#2d2d2d; display:none; ">
+			     		Not enough funds. Please remember about miners fee.
+			     	</div>
+
+			     	<div class="w3-row w3-section">
+
+				     	<div class="w3-col" style="width:99%">	
+					     	<input  class="w3-input " placeholder="Enter amount of EPIC to send" id="amount" type="text" name="amount" style="background-color: #3a3a3a; color: white;">					     	
+
+					    </div>
+					    	
+			     	</div>
+			     	<div class="w3-row w3-section">
+			     		<input  class="w3-input " placeholder="Add message to recipient (optional)" id="message" type="text" name="message" style="background-color: #3a3a3a; color: white;">			
+			     	</div>	
+			     	<div id="viewsmallest" class="w3-row w3-section w3-margin-bottom" style="display: none" >
+                       <div class="w3-col" style="width:10%">
+			     		<input class="w3-input w3-text-white " type="checkbox" name="smallest" id="smallest" value="smallest" > 
+			     	  </div>
+
+			     	  <label name="w34" class="w3-rest w3-text-white w3-left" for="smallest"> smallest outputs</label>	
+			     	</div>
+
+			        <button id="SendByFile" name="w35" class="w3-btn w3-round-xlarge  w3-small w3-rubik but" style="background-color: #e0b13d" onmouseover='changeColor(this,"#e8c878")' onmouseout='changeColor(this,"#e0b13d")' onclick='clicker(this)'>Send via File</button>
+			        <button id="SendByHttpMenu" name="w36" class="w3-btn w3-round-xlarge w3-margin-left w3-text-black w3-small w3-rubik" style="background-color: #e0b13d" onmouseover='changeColor(this,"#e8c878")' onmouseout='changeColor(this,"#e0b13d")' onclick='clicker(this)'>Send Direct</button>
+			    </div>
+
+	     	</div>	
+	 	</div>
+	  </div>
+	  <div id="new_wallet5" class="w3-margin" style="display: none; width: 100%;height:620px; ">
+	  	
+          <table style="width: 100%">
+          	<tr style="width: 100%">
+          	
+          	<td style="width: 30%; vertical-align: top">	
+          	<div class="w3-container" style="width:100%">
+          		<div id="yellowbackground" class="w3-text-black" style="background-image: url('logoold'); background-repeat:no-repeat;  background-size: 60%;  background-position: center 10px">
+                  <div class="w3-padding w3-round-large" style="text-align: left; background-color: #e0b13daa; width: 100%" >
+                  	<div class="w3-cell-row" style="width: 100%">
+                  		<div name="w37" class="w3-cell" style="width: 50%">
+                  		Total balance
+                  		</div>
+                  		<div  class="w3-cell " style="text-align: right;width: 50%; font-weight: bold">
+                  			<button id="showyellow" class="w3-btn w3-round-large" onmouseout="changeColor(this,'#00000000')" onclick="clicker(this)">...</button>
+                  		</div>
+                  	</div>	
+                  	<div  class="w3-xlarge w3-margin-bottom" style="text-align: center;">
+                  	<b><span id="total">0.0000</span> EPIC</b>
+                  	</div>
+                   <div id="yellowmore" style="display: none;">
+                  	<div class="w3-cell-row" style="width: 100%">
+                  		<div name="w38" class="w3-cell" style="width: 50%">
+                  			Spendable
+                  		</div>
+                  		<div id="Spendable" class="w3-cell " style="text-align: right;width: 50%; font-weight: bold">
+                  			0.0000
+                  		</div>	
+                  	</div>
+                  	<div class="w3-cell-row" style="width: 100%">
+                  		<div name="w39" class="w3-cell" style="width: 50%">
+                  			Unconfirmed
+                  		</div>
+                  		<div id="Unconfirmed" class="w3-cell" style="text-align: right;width: 50%;">
+                  			0
+                  		</div>	
+                  	</div>
+                  	<div class="w3-cell-row" style="width: 100%">
+                  		<div name="w40"  class="w3-cell" style="width: 50%">
+                  			Unfinalized
+                  		</div>
+                  		<div id="Unfinalized" class="w3-cell" style="text-align: right;width: 50%;">
+                  			0
+                  		</div>	
+                  	</div>
+                  	<div class="w3-cell-row" style="width: 100%">
+                  		<div name="w41" class="w3-cell" style="width: 50%">
+                  			Immature
+                  		</div>
+                  		<div id="Inmature" class="w3-cell" style="text-align: right;width: 50%;">
+                  			0
+                  		</div>	
+                  	</div>
+                  	<div class="w3-cell-row" style="width: 100%">
+                  		<div name="w42" class="w3-cell" style="width: 50%">
+                  			Locked
+                  		</div>
+                  		<div id="Locked" class="w3-cell" style="text-align: right;width: 50%;">
+                  			0
+                  		</div>	
+                  	</div>
+                   </div>		
+                  </div>	
+          		</div>
+          		<div class="w3-cell-row w3-rubik w3-text-white w3-large w3-margin-top w3-padding" style="width:100%" >
+          			<div  class="w3-cell" style="text-align: left; width: 90%" >
+          				<span name="w43" >Height</span>:  <span id="Height">...</span>
+          			</div>
+          			<div class="w3-cell" style="width: 10%">
+          				<img src="/icon-menu" style="display:none; width:100%; cursor: pointer;">
+          				<button id="settings" class="w3-btn w3-round-large" onmouseout="changeColor(this,'#00000000')" onclick="clicker(this)" >...</button>
+          			</div>		
+          		</div>
+
+          		<div class="w3-cell-row w3-rubik w3-text-white w3-large w3-padding" style="width:100%;" >
+          			<div class="w3-cell" style="font-weight: normal; text-align: left; width: 100% " >
+          				<div id="SendByFileMenu" name="w44" class="w3-btn w3-rubik w3-text-white w3-large w3-padding-right w3-hover-opacity w3-round-large" style="width:100%; cursor: pointer; background-color: #2d2d2ddd" onmouseout="changeColor(this, '#2d2d2ddd')" onclick="clicker(this)">Send</div>
+          			</div>
+
+          				
+          		</div>
+	
+          		<div  class="w3-cell-row w3-rubik w3-text-white w3-large w3-margin-top w3-margin-left w3-hover-opacity w3-round-large w3-margin-right w3-padding-right" style=" display:none; width:90%; cursor: pointer; background-color: #2d2d2ddd" onmouseout="changeColor(this, '#2d2d2ddd')" onclick="clicker(this)">
+          			<div class="w3-cell w3-padding-left" style="width: 10%" >
+          				<img class="w3-margin-left" src="/icon-create-tx-grey" style="height: 15px;">
+          			</div>
+          			<div class="w3-cell" style=" text-align: left; width: 90%" >
+          				<div class="w3-margin-left w3-medium">Create transaction file</div>
+          			</div>
+          			
+          		</div>
+          		
+          		<div  class="w3-cell-row w3-rubik w3-text-white w3-large w3-margin-top w3-margin-left w3-hover-opacity w3-round-large w3-margin-right w3-padding-right" style=" display:none; width:90%; cursor: pointer; background-color: #2d2d2ddd" onclick="clicker(this)" onmouseout="changeColor(this,'#2d2d2ddd')" >
+          			<div class="w3-cell w3-padding-left" style="width: 10%" >
+          				<img class="w3-margin-left" src="/icon-send-via-http-grey" style="height: 15px;">
+          			</div>
+          			<div class="w3-cell" style=" text-align: left; width:90%" >
+          				<div class="w3-margin-left w3-medium">Send via HTTP/HTTPS</div>
+          			</div>
+          			
+          		</div>
+          		
+          		<div class="w3-cell-row w3-rubik w3-text-white w3-large  w3-padding" style="width:100%" >
+          			<div class="w3-cell" style="font-weight: normal; text-align: left; width: 100%" >
+          				<div id="Receive" name="w45" class="w3-btn w3-rubik w3-text-white w3-large w3-hover-opacity w3-round-large" style="width:100%; cursor: pointer; background-color: #2d2d2ddd" onmouseout="changeColor(this, '#2d2d2ddd')" onclick="clicker(this)">Receive</div>
+          			</div>
+          		</div>
+
+
+          		<div class="w3-cell-row w3-rubik w3-text-white w3-large w3-padding" style="width:100%;" >
+          			<div class="w3-cell" style=" text-align: center;  width: 100%" >
+          				
+		          		<div id="FinalizeMenu" class="w3-btn  w3-rubik w3-text-white w3-large  w3-hover-opacity w3-round-large " style="width:100%; cursor: pointer; background-color: #2d2d2ddd" onmouseout="changeColor(this, '#2d2d2ddd')" onclick="clicker(this)">
+		          			<div class="w3-cell " style="display: none; text-align: right; max-height: 13px" >
+		          				<img class="" src="/icon-finalize-tx-grey" style="height: 13px;">
+		          			</div>
+		          			<!-- <div class="w3-cell" style=" text-align: center; width:100%" > -->
+		          				<div name="w46" class="w3-text-white w3-large">Finalize send via File</div>
+		          			<!-- </div> -->
+		          			
+		          		</div>
+
+          			</div>
+          		</div>
+                
+
+
+          		<div id="ReceiveMenu" class="w3-cell-row w3-rubik w3-text-white w3-large w3-margin-top w3-margin-left w3-hover-opacity w3-round-large w3-margin-right w3-padding-right" style="display:none; width:90%; cursor: pointer; background-color: #2d2d2ddd" onmouseout="changeColor(this,'#2d2d2ddd')" onclick="clicker(this)" >
+          			<div class="w3-cell w3-padding-left" style="width: 10%" >
+          				<img class="w3-margin-left" src="/icon-create-tx-response-grey" style="height: 15px;">
+          			</div>
+          			<div class="w3-cell" style=" text-align: left; width:90%" >
+          				<div class="w3-margin-left w3-medium" >Create transaction response file</div>
+          			</div>
+          			
+          		</div>
+          		<div id="ReceiveHttpMenu" class="w3-cell-row w3-rubik w3-text-white w3-large w3-margin-top w3-margin-left w3-hover-opacity w3-round-large w3-margin-right w3-padding-right" style="display:none; width:90%; cursor: pointer; background-color: #2d2d2ddd" onmouseout="changeColor(this,'#2d2d2ddd')" onclick="clicker(this)">
+          			<div class="w3-cell w3-padding-left" style="width: 10%" >
+          				<img class="w3-margin-left" src="/icon-open-http-listener-grey" style="height: 15px;">
+          			</div>
+          			<div class="w3-cell" style=" text-align: left; width:90%" >
+          				<div class="w3-margin-left w3-medium" >Open HTTP listener to receive</div>
+          			</div>
+          			
+          		</div>
+
+          		<div id="logoleft" class="w3-cell-row w3-rubik w3-text-white w3-large w3-margin-top  w3-padding w3-border w3-round-large" style="width:100%" >
+          			<div class="w3-padding">
+          				<img class="w3-margin-top" src="/epic_cash" style="width: 100%">
+          			</div>
+          		</div>	
+
+          	</div>
+          	</td>
+          	
+          	<td  style="vertical-align: top;">
+          	
+          		
+                  <div class="w3-container w3-round-large " style="background-color: #323232dd; width: 95%; " >
+                  
+                    <div class="w3-cell-row w3-rubik w3-text-white w3-large" style="width:100%" >
+          				<div name="w47" class="w3-cell " style="font-weight: bold; text-align: left; width: 70%; vertical-align: top" >
+          					Transactions
+          				</div>
+          				<div class="w3-cell w3-right" style="font-weight: bold; align-items:right; width:100%" >
+          					<img src="/icon-search" style="height: 15px; position: relative;; left:0px">
+          				    <input class="w3-input w3-rubik w3-medium w3-text-white" type="text" name="searchtransactions" id="searchtransactions" style="display:inline;background-color:#323232dd; width: 90%; align-self: right; height: 20px " onkeyup="searcher()" placeholder="Search">
+          				</div>
+
+          				
+          			</div>
+          			<div class="w3-cell-row w3-rubik w3-text-white w3-large" style="width:100%" >
+						<div class="w3-cell " style=" text-align: left;  vertical-align: top" >
+          					<button id="historyButtonSent" name="w48" class="w3-btn w3-round-large " style="background-color:#997e2f; color:black" onclick="clicker2(this)">Sent</button>
+          				</div>
+          				<div  class="w3-cell " style=" text-align: left;  vertical-align: top" >
+          					<button id="historyButtonReceived" name="w49" class="w3-btn w3-round-large" onclick="clicker2(this)">Received</button>
+          				</div>
+          				<div class="w3-cell " style=" text-align: left;  vertical-align: top" >
+          					<button id="historyButtonCancelled" name="w50" class="w3-btn w3-round-large" onclick="clicker2(this)">Canceled</button>
+          				</div>
+          				<div class="w3-cell " style=" text-align: left; width:100%; vertical-align: top" >
+          					<button id="historyButtonMore" name="w51" class="w3-btn w3-round-large" onclick="clicker2(this)">More</button>
+          				</div>
+          			</div>	
+          			<hr style="margin-bottom: 0">
+
+
+          			  <div id="historyCancelled" class=" w3-rubik w3-margin-top" style="display:none; min-height:  355px">
+          			  </div>
+
+          			  <div id="historyReceived" class=" w3-rubik w3-margin-top" style="display:none; min-height:  355px">
+          			  </div>	
+	                  
+          			  <div id="historyMore" class=" w3-rubik w3-margin-top" style="display:none; min-height:  355px">
+
+          			  </div>	
+
+	                  <div id="historySent" class=" w3-rubik w3-margin-top" style="min-height:  355px">
+
+
+	                  </div>
+	                  <div class="w3-rubik" style="text-align: right; width: 100%; color: #828282">
+	                  <button class="w3-btn" onclick="pagedown()"> <</button><span id="pagenumber">1</span><button class="w3-btn" onclick="pageup()"> ></button>
+	                  </div>	
+                  </div>
+
+              
+
+                	
+          	
+          	</td>
+          	</tr>	
+         </table> 	
+         
+     </div>
+	  <div id="new_wallet4" class="w3-display-container w3-margin w3-center" style="display: none; width: 100%;height:620px; ">
+	  	<div class="w3-display-middle">
+         
+     	  <div class="w3-container w3-padding w3-round-large" style="background: #3a3a3add; width:400px">	
+	      	<button class="w3-btn w3-left w3-round-large" style="background-color:#3a3a3a; display: none"> < </button>
+	        <div style="padding: 30px">
+	      		<div name="w52" class="w3-center w3-text-white w3-xlarge w3-rubik ">
+		     		<b>WELCOME</b>
+		     	</div>
+		     	<div name="w53" class="w3-small w3-margin-top w3-padding w3-rubik" style="color:#828282;background-color:#2d2d2d ">
+		     		Epic wallet data found.<br>Log in with your password.
+		     	</div>
+		     	<div name="w54" class="w3-margin-top w3-rubik" style="color:#e0b13d; text-align:left">
+		     		Password
+		     	</div>
+		     	<div class="w3-row w3-section">
+			     	<div class="w3-col" style="width:100%">	
+				     	<input class="w3-input w3-margin-bottom" id="passmain" type="password" name="pass" style="background-color: #3a3a3a; color: white">
+				     	<input class="w3-input w3-margin-bottom w3-rubik" id="passmainvisible" type="text" type="text" name="passvisible" style="background-color: #3a3a3a; color: white; display: none ">
+
+				    </div>
+				    <div class="w3-rest" style="display: none">
+				          <img src="/eye-icon" class="w3-opacity w3-hover-opacity-off" style="width: 100%; cursor: pointer; ">
+      
+				    </div> 	
+		     	</div>
+		        <button id="walletLogin" name="w55" class="w3-btn w3-round-xlarge w3-margin-top w3-small w3-rubik" style="background-color: #e0b13d; width: 100%" onmouseover="changeColor(this,'#e8c878')" onmouseout="changeColor(this,'#e0b13d')" onclick="clicker(this)" >LOGIN</button>
+
+
+		        <div class="w3-row w3-section">
+			       <div class="w3-col" style="width:100%">	
+				    <button id="advancedoptions" name="w56" class="w3-btn w3-round-xlarge w3-margin-top w3-small w3-rubik" style="background-color: #e0b13d" onmouseover="changeColor(this,'#e8c878')" onmouseout="changeColor(this,'#e0b13d')" onclick="clicker(this)" >Advanced options</button>
+
+				    
+				    
+					
+					  <div class="w3-dropdown-hover w3-text-black">
+					    <button id="Language" class="w3-btn w3-round-xlarge w3-margin-top w3-small w3-rubik" style="background-color: #e0b13d" onmouseover="changeColor(this,'#e8c878')" onmouseout="changeColor(this,'#e0b13d')">english</button>
+					    <div id="Languages" class="w3-dropdown-content w3-bar-block w3-card-4 w3-round-xlarge " style="background-color: #e0b13d">
+					      <a href="#" class="w3-bar-item w3-btn" style="background-color: #e0b13d" onmouseover="changeColor(this,'#e8c878')" onmouseout="changeColor(this,'#e0b13d')">English</a>
+					      <a href="#" class="w3-bar-item w3-btn" style="background-color: #e0b13d" onmouseover="changeColor(this,'#e8c878')" onmouseout="changeColor(this,'#e0b13d')">Chinese</a>
+					      <a href="#" class="w3-bar-item w3-btn" style="background-color: #e0b13d" onmouseover="changeColor(this,'#e8c878')" onmouseout="changeColor(this,'#e0b13d')">Marsian</a>
+					    </div>
+					  </div>
+					</div>	  
+				     	
+		      	</div>
+		        
+
+		    </div>		     	
+	      </div>
+     	</div>
+     </div>	  
+	  <div id="new_wallet3" class="w3-display-container w3-margin w3-center" style="display: none; width: 100%;height:620px; ">
+	  	<div class="w3-display-middle">
+         
+     	  <div class="w3-container w3-padding w3-round-large" style="background: #3a3a3add; width:500px">	
+	      	<button class="w3-btn w3-left w3-round-large" style="background-color:#3a3a3a; "> < </button>
+	        <div style="padding: 30px">
+	      		<div name="w57" class="w3-center w3-text-white w3-xlarge w3-rubik ">
+		     		<b>SEED PHRASE</b>
+		     	</div>
+		     	<div name="w58" class="w3-small w3-margin-top w3-padding w3-rubik" style="color:#828282;background-color:#2d2d2d ">
+		     		Import! Please back up your seed phrase to restore your wallet.
+		     	</div>
+		        <div class="w3-bar w3-margin-top  w3-rubik" style="width: 100%">
+		        	<div id="w1" name="words" class="w3-bar-item w3-round-large words">word1</div>
+		        	<div id="w2" name="words" class="w3-bar-item w3-round-large words">word2</div>
+		        	<div id="w3" name="words" class="w3-bar-item w3-round-large words">word3</div>
+		        	<div id="w5" name="words" class="w3-bar-item w3-round-large words">word4</div>
+		        	<div id="w6" name="words" class="w3-bar-item w3-round-large words">word4</div>
+		        	<div id="w7" name="words" class="w3-bar-item w3-round-large words">word4</div>
+		        	<div id="w8" name="words" class="w3-bar-item w3-round-large words">word4</div>
+		        	<div id="w9" name="words" class="w3-bar-item w3-round-large words">word4</div>
+		        	<div id="w10" name="words" class="w3-bar-item w3-round-large words">word4</div>
+		        	<div id="w11" name="words" class="w3-bar-item w3-round-large words">word4</div>
+		        	<div id="w12" name="words" class="w3-bar-item w3-round-large words">word4</div>
+		        	<div id="w13" name="words" class="w3-bar-item w3-round-large words">word4</div>
+		        	<div id="w14" name="words" class="w3-bar-item w3-round-large words">word4</div>
+		        	<div id="w15" name="words" class="w3-bar-item w3-round-large words">word4</div>
+		        	<div id="w16" name="words" class="w3-bar-item w3-round-large words">word4</div>
+		        	<div id="w17" name="words" class="w3-bar-item w3-round-large words">word4</div>
+		        	<div id="w18" name="words" class="w3-bar-item w3-round-large words">word4</div>
+		        	<div id="w19" name="words" class="w3-bar-item w3-round-large words">word4</div>
+		        	<div id="w20" name="words" class="w3-bar-item w3-round-large words">word4</div>
+		        	<div id="w21" name="words" class="w3-bar-item w3-round-large words">word4</div>
+		        	<div id="w22" name="words" class="w3-bar-item w3-round-large words">word4</div>
+		        	<div id="w23" name="words" class="w3-bar-item w3-round-large words">word4</div>
+		        	<div id="w24" name="words" class="w3-bar-item w3-round-large words">word4</div>
+		        	<div id="w25" name="words" class="w3-bar-item w3-round-large words">word4</div>
+		        	
+		        </div>
+		        <button id="BackedSeed" name="w59" class="w3-btn w3-round-xlarge w3-margin-top w3-small w3-rubik" style="background-color: #4c4c4c" onmouseover="changeColor(this,'#828282')" onmouseout="changeColor(this,'#4c4c4c')" onclick="clicker(this)" >OK, I backed my seed phrase</button>
+		    </div>		     	
+	      </div>
+     	</div>
+     </div>
+	 
+	 <div id="new_wallet2" class="w3-display-container w3-margin w3-center" style="display:none; width: 100%;height:620px; ">
+	     <div class="w3-display-middle">
+	      <div class="w3-container w3-padding w3-round-large" style="background: #3a3a3add; width:400px">	
+	      	<button id="CreateNewWalletNextCancel" class="w3-btn w3-left w3-round-large" style="background-color:#3a3a3a;" onclick="clicker(this)"> < </button>
+	      	<div style="padding: 30px">
+	      	  <div class="w3-center">
+		     	<img src="/logo" class="w3-margin-right" style="width:20%"><img   src="/epic_cash" style="width:50%">
+		     	</div>
+
+		     	<div name="w60" class="w3-small w3-margin-top w3-padding w3-rubik" style="color:#828282;background-color:#2d2d2d ">
+		     		No wallet exists found. Create a new one.
+		     	</div>
+		     	<div name="w61" class="w3-margin-top w3-rubik" style="color:#e0b13d; text-align:left">
+		     		Password
+		     	</div>
+		     	<div class="w3-row w3-section">
+			     	<div class="w3-col" style="width:90%">	
+				     	<input class="w3-input w3-margin-bottom" id="pass" type="password" name="pass" style="background-color: #3a3a3a; color: white">
+				     	<input class="w3-input w3-margin-bottom w3-rubik" id="passvisible" type="text" type="text" name="passvisible" style="background-color: #3a3a3a; color: white; display: none ">
+
+				    </div>
+				    <div class="w3-rest" >
+				          <img src="/eye-icon" class="w3-opacity w3-hover-opacity-off" style="width: 100%; cursor: pointer; ">
+      
+				    </div> 	
+		     	</div>
+		        <div class="w3-row w3-section">
+			     	<div class="w3-col" style="width:90%">
+				     	<input class="w3-input w3-margin-bottom" type="password" placeholder="Confrim password" id="pass2"  name="pass" style="background-color: #3a3a3a; color: white">
+				     	<input class="w3-input w3-margin-bottom w3-rubik" placeholder="Confrim password" id="pass2visible" type="text" name="pass" type="text" style="background-color: #3a3a3a; color: white; display: none">
+				    </div>
+				    <div class="w3-rest">
+				          <img src="/eye-icon" class="w3-opacity w3-hover-opacity-off" style="width: 100%; cursor: pointer;">
+      
+				    </div>
+				</div>     	
+		     	<button id="CreateNewWalletNext" name="w62" class="w3-btn w3-round-xlarge w3-margin-top w3-small w3-rubik" style="background-color: #e0b13d" onmouseover='changeColor(this,"#e8c878")' onmouseout='changeColor(this,"#e0b13d")' onclick='clicker(this)'>CREATE NEW WALLET</button>
+		     	
+	     	</div>
+	       </div>
+	      </dir>	
+	     </div>	
+	  </div>
+
+
+  </div>
+
+  <script>
+
+
+  const txfileSelector = document.getElementById('txfiletowallet');
+
+  var txfiletowallet = null;
+
+  txfileSelector.addEventListener('change', (event) => {
+    const fileList = event.target.files;
+    console.log(fileList);
+    if(fileList.length>0) { 
+      txfiletowallet = fileList[0]
+      receivetxfile() 
+    }
+  }); 
+
+  const finalizefileSelector = document.getElementById('finalizefiletowallet');
+
+  var finalizefiletowallet = null;
+
+  finalizefileSelector.addEventListener('change', (event) => {
+    const finalizefileList = event.target.files;
+    console.log(finalizefileList);
+    if(finalizefileList.length>0) { 
+      finalizefiletowallet = finalizefileList[0]
+      finalizeresponsefile() 
+    }
+  }); 
+
+ </script>
+ 
+</body>
+</html>	
