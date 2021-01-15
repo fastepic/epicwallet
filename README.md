@@ -1,0 +1,2 @@
+# epicwallet
+EPIC CASH wallet
