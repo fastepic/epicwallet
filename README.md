@@ -24,3 +24,20 @@ For Mac please copy epic-wallet_for_mac to publish folder and rename to epic-wal
 Main application start by NetCore file. You can rename it like you want ...aepicStart.exe for example.
 
 That's all.
+
+
+You can insert this application (NetCore.exe) in proccess of standard other NET application by
+
+
+             using(System.Diagnostics.Process pProcess = new System.Diagnostics.Process())
+             {
+                 pProcess.StartInfo.FileName = "NetCore.exe";
+                 pProcess.StartInfo.UseShellExecute = false;
+                 pProcess.StartInfo.RedirectStandardOutput = false;
+                 pProcess.StartInfo.RedirectStandardInput = false;
+                 pProcess.StartInfo.RedirectStandardError = false;
+                 pProcess.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                 pProcess.StartInfo.CreateNoWindow = true; //not diplay a windows
+                 pProcess.Start();
+
+             }
