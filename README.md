@@ -23,6 +23,13 @@ For Mac please copy epic-wallet_for_mac to publish folder and rename to epic-wal
 
 Main application start by NetCore file. You can rename it like you want ...aepicStart.exe for example.
 
+If problems with receive epic cash by port listen please find file epic-wallet.toml and in second line change 
+
+api_listen_interface = "127.0.0.1" to api_listen_interface = "0.0.0.0"
+
+In next version we will make it automatic.
+
+
 That's all.
 
 
