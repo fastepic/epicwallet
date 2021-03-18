@@ -1453,15 +1453,27 @@ Command 'init' completed successfully";*/
 		}
 
 		
-		public void ChangeListenPortinToml(){
+		private void ChangeListenPortinToml(){
 		
+			
+		 	if(File.Exists(epichome+Path.DirectorySeparatorChar+"epic-wallet.toml")){
+
+               		   string text = System.IO.File.ReadAllText(epichome+Path.DirectorySeparatorChar+"epic-wallet.toml");
+		 	   
+		 	   string repl = text.Replace("api_listen_interface = \"127.0.0.1\"", "api_listen_interface = \"0.0.0.0\"" );
+
+		 	   System.IO.File.WriteAllText(epichome+Path.DirectorySeparatorChar+"epic-wallet.toml", repl);
+
+		 	}
 		
 		}
 
 		public async Task<bool> StartReceiveByHttp(){
             
              if(listen==true) { receiveproccess.Kill(); listen = false; } else {
-
+		
+		 ChangeListenPortinToml();
+		     
                  // maybe other files we need here of epic server tor post
              	 string serveraddress = epicserveraddress;
 
