@@ -15,22 +15,25 @@ Mac
 
 dotnet publish --configuration Release  --runtime osx-x64  --self-contained true /p:PublishTrimmed=true
 
-After compilation copy files others then *.cs *.proj to publish folder plus Icons folder.
+Copy the contents of the epicwallet directory EXCEPT FOR *.cs, *.csproj, and bin to epicwallet/bin/Release/net5.0/osx-x64/publish with the option to replace any duplicate files.
 
-For use tor you must have tor installed and curl. For Windows please copy standaleone curl.exe and curl need files to publish folder. 
+Rename epic-wallet_for_mac to epic-wallet in the publish directory. 
 
-For Mac please copy epic-wallet_for_mac to publish folder and rename to epic-wallet.
+Copy the contents of the publish directory to your user directory.  For example, Users/Bobby
 
-Main application start by NetCore file. You can rename it like you want ...aepicStart.exe for example.
+Rename NetCore to Epic_Wallet and double click Epic_Wallet.  
+
+You should now see a terminal window open with some descriptive text and your web browser should open with the Epic Cash wallet page
+
+Other Comments:
 
 If problems with receive epic cash by port listen please find file epic-wallet.toml and in second line change 
 
 api_listen_interface = "127.0.0.1" to api_listen_interface = "0.0.0.0"
 
+To use tor you must have tor installed and curl. For Windows please copy standaleone curl.exe and curl need files to publish folder. 
+
 In next version we will make it automatic.
-
-
-That's all.
 
 
 You can insert this application (NetCore.exe) in proccess of standard other NET application by
