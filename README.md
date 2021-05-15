@@ -13,7 +13,7 @@ dotnet-sdk.dotnet publish --configuration Release  --runtime linux-x64  --self-c
 
 Mac
 
-dotnet-sdk.dotnet publish --configuration Release  --runtime osd-x64  --self-contained true /p:PublishTrimmed=true
+dotnet publish --configuration Release  --runtime osx-x64  --self-contained true /p:PublishTrimmed=true
 
 After compilation copy files others then *.cs *.proj to publish folder plus Icons folder.
 
