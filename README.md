@@ -5,32 +5,38 @@ Compilations:
 
 Windows
 
-dotnet-sdk.dotnet publish --configuration Release  --runtime win-x64  --self-contained true /p:PublishTrimmed=true
+dotnet publish --configuration Release  --runtime win-x64  --self-contained true /p:PublishTrimmed=true
 
 Linux
 
-dotnet-sdk.dotnet publish --configuration Release  --runtime linux-x64  --self-contained true /p:PublishTrimmed=true
+dotnet publish --configuration Release  --runtime linux-x64  --self-contained true /p:PublishTrimmed=true
 
 Mac
 
-dotnet-sdk.dotnet publish --configuration Release  --runtime osd-x64  --self-contained true /p:PublishTrimmed=true
+dotnet publish --configuration Release  --runtime osx-x64  --self-contained true /p:PublishTrimmed=true
 
-After compilation copy files others then *.cs *.proj to publish folder plus Icons folder.
+Copy the contents of the epicwallet directory EXCEPT FOR *.cs, *.csproj, and bin to epicwallet/bin/Release/net5.0/osx-x64/publish and replace any duplicate files.
 
-For use tor you must have tor installed and curl. For Windows please copy standaleone curl.exe and curl need files to publish folder. 
+In the publish directory, rename epic-wallet_for_mac to epic-wallet and rename NetCore to EpicStart. 
 
-For Mac please copy epic-wallet_for_mac to publish folder and rename to epic-wallet.
+Copy the entire publish directory to your desktop and rename it Epic_Cash.  
 
-Main application start by NetCore file. You can rename it like you want ...aepicStart.exe for example.
+Right click your desktop Epic_Cash directory and open a new terminal to it.
 
-If problems with receive epic cash by port listen please find file epic-wallet.toml and in second line change 
+Run Epic_Wallet by typing ./EpicStart.  The browser wallet should now open.
 
-api_listen_interface = "127.0.0.1" to api_listen_interface = "0.0.0.0"
+If it fails, reboot the computer if and run the ./EpicStart command again from your desktop Epic_Cash directory
 
-In next version we will make it automatic.
+Other Comments:
 
+If there are problems with receiving epic cash update the second line of epic-wallet.toml to this:
 
-That's all.
+api_listen_interface = "0.0.0.0"
+
+This listen port will be automated in future versions.
+
+To use tor you must have tor installed and curl. For Windows please copy standaleone curl.exe and curl need files to publish folder. 
+
 
 
 You can insert this application (NetCore.exe) in proccess of standard other NET application by
